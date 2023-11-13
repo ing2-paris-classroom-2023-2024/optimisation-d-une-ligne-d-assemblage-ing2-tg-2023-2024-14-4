@@ -1,7 +1,7 @@
-#include <stdio.h>
-
+#include "Header_general.h"
 int main()
 {
-    printf("a");
+    assemblage voiture;
+    recuperation_de_donnees(&voiture);
     return 0;
 }
