@@ -1,0 +1,8 @@
+//
+// Created by amaur on 13/11/2023.
+//
+
+#ifndef PROJETS1_HEADER_GENERAL_H
+#define PROJETS1_HEADER_GENERAL_H
+
+#endif //PROJETS1_HEADER_GENERAL_H
