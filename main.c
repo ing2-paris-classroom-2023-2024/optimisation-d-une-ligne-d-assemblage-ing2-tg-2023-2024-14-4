@@ -3,7 +3,7 @@
 
 int main()
 {
-    assemblage voiture;
+    t_assemblage voiture;
     recuperation_de_donnees(&voiture); //test de github
     return 0;
 }
