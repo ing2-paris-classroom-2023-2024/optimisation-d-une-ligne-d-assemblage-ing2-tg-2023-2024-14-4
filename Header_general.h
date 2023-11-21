@@ -9,22 +9,22 @@
 #include"time.h"
 #include"string.h"
 
-typedef struct actions_duree
+typedef struct actions_duree // Structure qui correspond au duree des actions
 {
     int num_action;
     float temps_action;
-}actions;
+}t_actions_duree;
 
-typedef struct exclusions
+typedef struct exclusions // Structure avec les valeurs des actions des exclusions
 {
     int action1;
     int action2;
-}exclusions;
+}t_exclusions;
 
-typedef struct assemblage
+typedef struct assemblage // Structure Assemblage principal
 {
-    actions *tab_actions;
-    exclusions *tab_ex;
+    t_actions_duree *tab_actions;
+    t_exclusions *tab_ex;
     int nombre_actions;
     int nombre_exclusions;
 }t_assemblage;
