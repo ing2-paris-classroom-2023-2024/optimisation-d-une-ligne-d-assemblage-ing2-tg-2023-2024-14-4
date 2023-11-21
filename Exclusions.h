@@ -8,4 +8,5 @@ int TestExclusion(t_exclusions exclusions[],int numExclusions,int Action1,int Ac
 int Exclusion();
 
 
+
 #endif //PROJETS1_EXCLUSIONS_H
