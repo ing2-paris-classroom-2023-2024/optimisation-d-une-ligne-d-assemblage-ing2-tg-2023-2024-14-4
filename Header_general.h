@@ -4,29 +4,34 @@
 
 #ifndef PROJETS1_HEADER_GENERAL_H
 #define PROJETS1_HEADER_GENERAL_H
-#include "stdio.h"
+#include"stdio.h"
 #include"stdlib.h"
 #include"time.h"
 #include"string.h"
 
-typedef struct actions_duree // Structure qui correspond au duree des actions
+typedef struct station
+{
+    int station;
+    float tempstotal;
+}t_station;
+
+typedef struct actions_duree
 {
     int num_action;
+    int disponible;           //est ce que l action est deja dans l assemblage ou pas
     float temps_action;
-}t_actions_duree;
+    int precedence;
+    int nombre_de_precedence;
+    int exclusion;
+    int nombre_de_exclusion;
+}t_actions;
 
-typedef struct exclusions // Structure avec les valeurs des actions des exclusions
+typedef struct assemblage
 {
-    int action1;
-    int action2;
-}t_exclusions;
-
-typedef struct assemblage // Structure Assemblage principal
-{
-    t_actions_duree *tab_actions;
-    t_exclusions *tab_ex;
+    t_station tab_station;
+    t_actions *tab_actions;
     int nombre_actions;
-    int nombre_exclusions;
+    int nombre_stations;
 }t_assemblage;
 
 void recuperation_de_donnees(t_assemblage *voiture);
