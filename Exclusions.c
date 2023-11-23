@@ -20,6 +20,7 @@ int Exclusion()
 {
     FILE *listeExclusions;
     t_assemblage Assemblage;
+    t_actions_duree Duree;
     int nbCycles=10;
     int nbOperations=35;
     char operations;
