@@ -6,6 +6,6 @@ int main()
     t_assemblage voiture;
     recuperation_de_donnees(&voiture); //test de github
     Exclusion();
-    printf("test\n");
+    printf("Test 1\n");
     return 0;
 }
