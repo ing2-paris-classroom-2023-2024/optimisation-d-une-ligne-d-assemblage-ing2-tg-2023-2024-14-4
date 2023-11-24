@@ -9,25 +9,34 @@
 #include"time.h"
 #include"string.h"
 
-typedef struct actions_duree // Structure qui correspond au duree des actions
+
+//
+typedef struct station{
+    int *station;
+    float tempstotal;
+}t_station;
+typedef struct actions_duree
 {
     int num_action;
+    int disponible;//est ce que l action est deja dans l assemblage ou pas
     float temps_action;
-}t_actions_duree;
+    int *precedence;
+    int nombre_de_precedence;
+    int *exclusion;
+    int nombre_de_exclusion;
+}actions;
 
-typedef struct exclusions // Structure avec les valeurs des actions des exclusions
-{
-    int action1;
-    int action2;
-}t_exclusions;
 
-typedef struct assemblage // Structure Assemblage principal
+
+typedef struct assemblage
 {
-    t_actions_duree *tab_actions;
-    t_exclusions *tab_ex;
+    t_station *tab_station;
+    actions *tab_actions;
     int nombre_actions;
-    int nombre_exclusions;
+    int nombre_stations;
 }t_assemblage;
 
+int indice(int valeurdelastation,t_assemblage voiture);
 void recuperation_de_donnees(t_assemblage *voiture);
+
 #endif //PROJETS1_HEADER_GENERAL_H

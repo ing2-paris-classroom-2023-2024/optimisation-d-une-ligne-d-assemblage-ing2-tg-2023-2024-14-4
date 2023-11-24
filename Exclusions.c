@@ -2,7 +2,7 @@
 #include "Header_general.h"
 
 #define MAX_EXCLUSIONS 35
-
+/*
 int TestExclusion(t_exclusions exclusions[],int numExclusions,int Action1,int Action2)
 {
     int numero=0;
@@ -48,5 +48,5 @@ int Exclusion()
     }
     return 0;
 }
-
+*/
 
