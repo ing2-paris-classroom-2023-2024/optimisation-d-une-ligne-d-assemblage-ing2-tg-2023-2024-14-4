@@ -7,6 +7,7 @@ int main()
     t_assemblage voiture;
     recuperation_de_donnees(&voiture); //test de github
     //Exclusion();
+    printf("Hello World ! ");
     //fonction_generale(&voiture);
     return 0;
 }
