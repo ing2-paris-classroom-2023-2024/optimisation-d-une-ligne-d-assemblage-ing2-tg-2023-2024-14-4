@@ -1,44 +1,68 @@
 #include <stdio.h>
-#include "Header_general.h"
+#include "Exclusions.h"
 
-#define MAX_EXCLUSIONS 35
-/*
-int TestExclusion(t_exclusions exclusions[],int numExclusions,int Action1,int Action2)
+int TestExclusion(int Action1,int Action2)
 {
-    int numero=0;
-    for(numero=0;numero<numExclusions;numero++)
+    FILE *listeExclusions;
+    char c;
+    int nbExclusions=0;
+    int nb1,nb2;
+    int ActionCherchee=1;         // Variable où on cherche les exclusions de chaque action
+    int tabExclusions[36][35];    // Tableau qui stocke 36 lignes car on utilise pas la ligne 0 qui correspond aux nombres d'actions et 35 qui correspond aux nombres d'exclusions de chaque actions qui est au maximum de 34 plus le nombres d'exclusions de l'action.
+    for(int actions=0;actions<=35;actions++)
     {
-        if((exclusions[numero].action1==Action1 && exclusions[numero].action2==Action2)||(exclusions[numero].action1==Action2 && exclusions[numero].action2==Action1))
+        for(int j=0;j<=34;j++)
         {
-            return 1;
+            tabExclusions[actions][j]=0;      // On remplit le tableau avec des 0 pour pas avoir des valeurs pourris
         }
     }
+    if(listeExclusions==NULL)
+    {
+        printf("Pb d'affichage\n");
+    }
+    while(ActionCherchee<=35)
+    {
+        listeExclusions=fopen("exclusions.txt","r");
+        while(feof(listeExclusions)==0)
+        {
+            fscanf(listeExclusions,"%d",&nb1);
+            fscanf(listeExclusions,"%d",&nb2);
+            if(ActionCherchee==nb1)             // Si dans le fichier texte, on a l'action qu'on cherche dans notre ligne
+            {
+                tabExclusions[ActionCherchee][0]++;
+                tabExclusions[ActionCherchee][tabExclusions[ActionCherchee][0]]=nb2;    // On met nb2 dans la 1ère colonne disponible de la ligne du numéro d'exclusion.
+            }
+        }
+        ActionCherchee++;      // On change la valeur de l'action
+    }
+    for(int actions=0;actions<=35;actions++)
+    {
+        printf("Action : %d : ",actions);           // Prendre les valeurs
+        for(int j=0;j<=34;j++)
+        {
+            printf("%d ",tabExclusions[actions][j]);
+        }
+        printf("\n");
+    }
+    fclose(listeExclusions);
     return 0;
 }
 
 int Exclusion()
 {
-    FILE *listeExclusions;
-    t_assemblage Assemblage;
-    t_actions_duree Duree;
-    int nbCycles=10;
-    int nbOperations=35;
-    char operations;
-    listeExclusions=fopen("..\\exclusion.txt","r");
-    if(listeExclusions==NULL)
-    {
-        printf("Pb d'affichage\n");
-    }
-    int maxActions=0;
-    int action1;
-    int action2;
+    t_assemblage Voiture;
+    t_station *Stations;
+    t_actions *Actions;
     int numExclusions=0;
-    t_exclusions exclusions[MAX_EXCLUSIONS];
-    fclose(listeExclusions);
-    printf("Nombre total d'actions : %d\n",maxActions);
+    Stations=(t_station*)malloc(sizeof(t_station));
+    if(Stations->station==NULL)
+    {
+        printf("Pb de creation de stations\n");
+    }
+    printf("Nombre total de stations: %d\n",Stations->station);
     int valeurAction1=1;
     int valeurAction2=4;
-    if(TestExclusion(exclusions, numExclusions, valeurAction1,valeurAction2)==0)
+    if(TestExclusion(valeurAction1,valeurAction2)==0)
     {
         printf("Les actions %d et %d ne peuvent pas se situer dans la meme station.\n",valeurAction1,valeurAction2);
     }
@@ -46,7 +70,8 @@ int Exclusion()
     {
         printf("Les actions %d et %d peuvent se situer dans la meme station.\n",valeurAction1,valeurAction2);
     }
+    printf("Bonjour\n");
     return 0;
 }
-*/
+
 
