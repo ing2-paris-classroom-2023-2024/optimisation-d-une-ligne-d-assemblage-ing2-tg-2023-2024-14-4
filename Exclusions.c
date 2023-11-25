@@ -52,13 +52,11 @@ int Exclusion()
 {
     t_assemblage Voiture;
     t_station *Stations;
-    t_actions *Actions;
+    actions *Actions;
     int numExclusions=0;
-    Stations=(t_station*)malloc(sizeof(t_station));
-    if(Stations->station==NULL)
-    {
-        printf("Pb de creation de stations\n");
-    }
+    Stations=(t_station*)malloc(sizeof(t_station)*1);
+    if(Stations->station==NULL)printf("Pb de creation de stations\n");
+
     printf("Nombre total de stations: %d\n",Stations->station);
     int valeurAction1=1;
     int valeurAction2=4;

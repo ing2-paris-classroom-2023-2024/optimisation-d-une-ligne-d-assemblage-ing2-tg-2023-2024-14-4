@@ -14,6 +14,7 @@
 typedef struct station{
     int *station;
     float tempstotal;
+    int nombre_action;
 }t_station;
 typedef struct actions_duree
 {
@@ -34,6 +35,7 @@ typedef struct assemblage
     actions *tab_actions;
     int nombre_actions;
     int nombre_stations;
+    float tempsparstation;
 }t_assemblage;
 
 int indice(int valeurdelastation,t_assemblage voiture);

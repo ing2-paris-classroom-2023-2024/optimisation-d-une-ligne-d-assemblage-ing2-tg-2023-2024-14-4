@@ -2,41 +2,55 @@
 
 
 
-int rechercher_actions_la_plus_importante(t_assemblage voiture){
-  //renvoie le sommet(sa valeur pas son indice)
+actions rechercher_actions_la_plus_importante(t_assemblage voiture,t_station current){
+    printf("recherche d action la plus importante en cours ->");
     int valeur_max=-1;
     for (int i = 0; i < voiture.nombre_actions; i++) {
-        if(voiture.tab_actions[i].nombre_de_precedence>valeur_max && voiture.tab_actions[i].disponible==0)valeur_max=voiture.tab_actions[i].num_action;
+        if(voiture.tab_actions[i].nombre_de_precedence>valeur_max && voiture.tab_actions[i].disponible==0 && (current.tempstotal+voiture.tab_actions[i].temps_action<voiture.tempsparstation))valeur_max=voiture.tab_actions[i].num_action;
     }
-    return valeur_max;
+    printf("recherche action la plus importante trouvée %d",valeur_max);
+    return voiture.tab_actions[indice(valeur_max,voiture)];
 }//renvoie l'action non visite
 
-void station_disponible_precedence(t_assemblage *voiture)
+int action_disponible_precedence(t_assemblage *voiture)
 {
+    printf("action disponible en cours -> ");
     for (int i = 0; i < voiture->nombre_actions; i++) {
         for (int j = 0; j < voiture->nombre_actions; j++) {
             if(voiture->tab_actions[i].disponible!=0) {
                 for (int k = 0; k < voiture->tab_actions[j].nombre_de_precedence; k++) {
-                    if (voiture->tab_actions[j].precedence[k] == voiture->tab_actions[i].num_action)
+                    if (voiture->tab_actions[j].precedence[k] == voiture->tab_actions[i].num_action && voiture->tab_actions[i].disponible!=2)
                         voiture->tab_actions[i].disponible = 0;
                 }
             }
         }
     }
+    printf(" action disponible reussi\n");
+    return 1;
+}
+void ajout_precedence(actions current_action ,t_assemblage* voiture,int i){
+    printf("ajout precedence en cours ->");
+    voiture->tab_station[i].tempstotal+=current_action.temps_action;
+    voiture->tab_station[i].nombre_action+=1;
+    voiture->tab_station[i].station=(int*) realloc(voiture->tab_station[i].station,sizeof (int)*voiture->tab_station[i].nombre_action);
+    voiture->tab_station[i].station[i]=current_action.num_action;
+    voiture->tab_actions[indice(current_action.num_action,*voiture)].disponible=2;
+
+
+    printf(" ajout precedence reussi.\n");
 }
 
 
 
-/*void recherche_station_disponible(t_assemblage *voiture){
 
-
-
-}*//*
 void fonction_generale(t_assemblage *voitures){
     int i=0;
-    station_disponible_precedence(voitures);
-    while(voitures->tab_station[i]){
+    actions mostimportant;
 
+    while(voitures->tab_station[i].tempstotal<5){
+        action_disponible_precedence(voitures);
+        mostimportant= rechercher_actions_la_plus_importante(*voitures,voitures->tab_station[i]);
+        ajout_precedence(mostimportant, *voitures,i);
 
 
     }
@@ -44,10 +58,16 @@ void fonction_generale(t_assemblage *voitures){
 
 
 
-            )
+
 
 }
-*/
+/*
+ * action.disponible :    0->pas disponible
+ *                        1->disponible
+ *                        2->pas disponible mais deja dans une station
+ */
+
+
 //tableau de station disponible
 //tableau de station utilisée
 /* tant que toutes les actions ne sont pas faites :
