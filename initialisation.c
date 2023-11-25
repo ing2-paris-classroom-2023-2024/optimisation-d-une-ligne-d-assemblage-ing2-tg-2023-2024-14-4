@@ -7,7 +7,8 @@ int indice(int valeurdelaction,t_assemblage voiture){
     for (int i = 0; i < voiture.nombre_stations; i++) {
         if(voiture.tab_actions[i].num_action==valeurdelaction)return i;
     }
-    printf("probleme lors de la fonction indice");
+    printf("probleme lors de la fonction indice\n");
+    EXIT_FAILURE;
     return 0;
 }
 void recuperation_de_donnees(t_assemblage *voiture) {
@@ -16,6 +17,7 @@ void recuperation_de_donnees(t_assemblage *voiture) {
     if (fichier == NULL)printf("probleme ouverture fichier operation");
     int i = 0;
     voiture->tab_actions=NULL;
+    voiture->tempsparstation=5;
     do {
         voiture->tab_actions = (actions *) realloc(voiture->tab_actions, sizeof(actions) * (i + 1));
         i++;
@@ -31,8 +33,8 @@ void recuperation_de_donnees(t_assemblage *voiture) {
         voiture->tab_actions[j].exclusion=NULL;
         voiture->tab_actions[j].disponible=0;
     }
-    fichier = fopen("..\\exclusion.txt", "r");
-    if (fichier == NULL)printf("probleme ouverture fichier");
+    fichier = fopen("..\\exclusions.txt", "r");
+    if (fichier == NULL)printf("probleme ouverture fichier exclusions");
     int action_temp;
     i = 0;
     do {
