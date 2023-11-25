@@ -5,7 +5,9 @@
 int main()
 {
     t_assemblage voiture;
-    recuperation_de_donnees(&voiture); //test de github
+    recuperation_de_donnees(&voiture);
+    fonction_generale(&voiture);
+
 
 
     return 0;

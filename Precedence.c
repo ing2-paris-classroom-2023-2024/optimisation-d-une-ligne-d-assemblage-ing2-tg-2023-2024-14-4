@@ -4,12 +4,15 @@
 
 actions rechercher_actions_la_plus_importante(t_assemblage voiture,t_station current){
     printf("recherche d action la plus importante en cours ->");
+    actions pas_de_voiture;
+    pas_de_voiture.disponible=-1;
     int valeur_max=-1;
     for (int i = 0; i < voiture.nombre_actions; i++) {
         if(voiture.tab_actions[i].nombre_de_precedence>valeur_max && voiture.tab_actions[i].disponible==0 && (current.tempstotal+voiture.tab_actions[i].temps_action<voiture.tempsparstation))valeur_max=voiture.tab_actions[i].num_action;
     }
-    printf("recherche action la plus importante trouvée %d",valeur_max);
-    return voiture.tab_actions[indice(valeur_max,voiture)];
+    printf("recherche action la plus importante trouve %d\n",valeur_max);
+    if(valeur_max!=-1)return voiture.tab_actions[indice(valeur_max,voiture)];
+    else return pas_de_voiture;
 }//renvoie l'action non visite
 
 int action_disponible_precedence(t_assemblage *voiture)
@@ -35,6 +38,7 @@ void ajout_precedence(actions current_action ,t_assemblage* voiture,int i){
     voiture->tab_station[i].station=(int*) realloc(voiture->tab_station[i].station,sizeof (int)*voiture->tab_station[i].nombre_action);
     voiture->tab_station[i].station[i]=current_action.num_action;
     voiture->tab_actions[indice(current_action.num_action,*voiture)].disponible=2;
+    printf("%d  ",indice(current_action.num_action,*voiture));
 
 
     printf(" ajout precedence reussi.\n");
@@ -46,23 +50,22 @@ void ajout_precedence(actions current_action ,t_assemblage* voiture,int i){
 void fonction_generale(t_assemblage *voitures){
     int i=0;
     actions mostimportant;
-
-    while(voitures->tab_station[i].tempstotal<5){
-        action_disponible_precedence(voitures);
-        mostimportant= rechercher_actions_la_plus_importante(*voitures,voitures->tab_station[i]);
-        ajout_precedence(mostimportant, *voitures,i);
-
-
+    action_disponible_precedence(voitures);
+    while(rechercher_actions_la_plus_importante(*voitures,voitures->tab_station[i]).disponible!=-1) {
+        printf("%d\n",i);
+        while (voitures->tab_station[i].tempstotal < 5) {
+            action_disponible_precedence(voitures);
+            mostimportant = rechercher_actions_la_plus_importante(*voitures, voitures->tab_station[i]);
+            ajout_precedence(mostimportant, voitures, i);
+        }
+        voitures->tab_station[i].nombre_action-=1;
+        i+=1;
+        printf("\n\n\n");
     }
-
-
-
-
-
-
 }
 /*
- * action.disponible :    0->pas disponible
+ * action.disponible :    -1:plus de station"code erreur"
+ *                        0->pas disponible
  *                        1->disponible
  *                        2->pas disponible mais deja dans une station
  */
