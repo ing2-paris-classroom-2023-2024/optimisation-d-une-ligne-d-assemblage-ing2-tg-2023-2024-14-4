@@ -64,4 +64,4 @@ void recuperation_de_donnees(t_assemblage *voiture) {
     voiture->tab_station[0].station=(int*) malloc(sizeof (int)*1);
     voiture->nombre_stations=1;
 }
- // test
+ // tes
