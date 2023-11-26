@@ -645,6 +645,11 @@ int main() {
 
     // Libération de la mémoire allouée pour les tableaux
     liberer_memoire(&tab_arcs, &tab_op);
+    printf("hello world!");
+    printf("hello world!");
+    printf("hello world!");
+    printf("hello world!");
+    printf("hello world!");
 
     return 0;
 } // FIN MAIN
