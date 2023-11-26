@@ -8,6 +8,7 @@ int main()
     recuperation_de_donnees(&voiture);
     //fonction_generale(&voiture);
     mainprecedence();
+    // testprecedence();
 
 
     return 0;
