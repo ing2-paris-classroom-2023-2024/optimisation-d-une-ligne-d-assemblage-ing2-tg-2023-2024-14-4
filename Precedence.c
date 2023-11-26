@@ -317,6 +317,7 @@ void Remplir_operations(Tableau_arcs *tab_arcs, Tableau_operations *tab_op) {
 // FIN Fonction pour remplir les opérations
 
 // Fonction compare_operations
+
 int compare_operations(const void *a, const void *b) {
 
     // Compare d'abord priorite(niv)
@@ -681,11 +682,10 @@ int mainprecedence() {
     // Libération de la mémoire allouée pour les tableaux
     liberer_memoire(&tab_arcs, &tab_op);
     printf("hello_world");
+    printf("hello_world");
 
 
 
 
 
-
-    return 0;
 } // FIN MAIN
