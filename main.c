@@ -8,8 +8,8 @@ int main()
     recuperation_de_donnees(&voiture);
     //fonction_generale(&voiture);
     mainprecedence();
+    // ca marche pas
 
 
     return 0;
 }
-// Compare this snippet from Precedence.c:
