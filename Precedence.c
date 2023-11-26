@@ -683,6 +683,7 @@ int mainprecedence() {
     liberer_memoire(&tab_arcs, &tab_op);
     printf("hello_world");
     printf("hello_world");
+    printf("hello_world");
 
 
 
