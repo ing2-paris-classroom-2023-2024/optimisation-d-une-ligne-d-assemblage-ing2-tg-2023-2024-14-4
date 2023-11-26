@@ -681,6 +681,8 @@ int mainprecedence() {
     // Libération de la mémoire allouée pour les tableaux
     liberer_memoire(&tab_arcs, &tab_op);
     printf("hello_world");
+    printf("hello_world");
+
 
 
 
