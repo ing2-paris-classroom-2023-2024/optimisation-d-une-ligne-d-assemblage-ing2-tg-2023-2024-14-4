@@ -4,10 +4,13 @@
 #include "Header_general.h"
 
 int indice(int valeurdelaction,t_assemblage voiture){
-    for (int i = 0; i < voiture.nombre_stations; i++) {
+
+
+    for (int i = 0; i < voiture.nombre_actions; i++) {
+        //printf("   %d",voiture.tab_actions[i].num_action);
         if(voiture.tab_actions[i].num_action==valeurdelaction)return i;
     }
-    printf("probleme lors de la fonction indice\n");
+    printf("]probleme lors de la fonction indice\n");
     EXIT_FAILURE;
     return 0;
 }
@@ -31,7 +34,7 @@ void recuperation_de_donnees(t_assemblage *voiture) {
         voiture->tab_actions[j].nombre_de_precedence=0;
         voiture->tab_actions[j].precedence=NULL;
         voiture->tab_actions[j].exclusion=NULL;
-        voiture->tab_actions[j].disponible=0;
+        voiture->tab_actions[j].disponible=1;
     }
     fichier = fopen("..\\exclusions.txt", "r");
     if (fichier == NULL)printf("probleme ouverture fichier exclusions");

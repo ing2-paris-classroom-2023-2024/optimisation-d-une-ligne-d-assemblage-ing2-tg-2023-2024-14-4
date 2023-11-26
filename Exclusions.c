@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "Exclusions.h"
-
+//void exclusion()
 int TestExclusion(int Action1,int Action2)
 {
     FILE *listeExclusions;
