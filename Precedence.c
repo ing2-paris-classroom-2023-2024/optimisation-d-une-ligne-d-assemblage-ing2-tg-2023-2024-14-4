@@ -340,7 +340,6 @@ int compare_operations(const void *a, const void *b) {
 // Fonction pour trier le tableau d'opérations
 void Trier_operations(Tableau_operations *tab_op) {
     qsort(tab_op->operations, tab_op->nb_op, sizeof(Operations), compare_operations);
-    printf("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
 }
 // FIN    Trier_operations
 
@@ -680,7 +679,6 @@ int mainprecedence() {
 
     // Libération de la mémoire allouée pour les tableaux
     liberer_memoire(&tab_arcs, &tab_op);
-
 
 
 
