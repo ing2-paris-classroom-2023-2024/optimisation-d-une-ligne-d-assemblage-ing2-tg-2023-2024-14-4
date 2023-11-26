@@ -3,50 +3,79 @@
 
 
 actions rechercher_actions_la_plus_importante(t_assemblage voiture,t_station current){
-    printf("recherche d action la plus importante en cours ->");
+    printf("MOST IMPORTANT ACTION ->");
     actions pas_de_voiture;
     pas_de_voiture.disponible=-1;
     int valeur_max=-1;
     for (int i = 0; i < voiture.nombre_actions; i++) {
-        if(voiture.tab_actions[i].nombre_de_precedence>valeur_max && voiture.tab_actions[i].disponible==0 && (current.tempstotal+voiture.tab_actions[i].temps_action<voiture.tempsparstation))valeur_max=voiture.tab_actions[i].num_action;
+        if(voiture.tab_actions[i].nombre_de_precedence>valeur_max && voiture.tab_actions[i].disponible==1 && (current.tempstotal+voiture.tab_actions[i].temps_action<voiture.tempsparstation))valeur_max=voiture.tab_actions[i].num_action;
     }
-    printf("recherche action la plus importante trouve %d\n",valeur_max);
+    printf("DONE : %d\n",valeur_max);
     if(valeur_max!=-1)return voiture.tab_actions[indice(valeur_max,voiture)];
-    else return pas_de_voiture;
+
+    else{
+        printf("PROBLEM");
+        return pas_de_voiture;
+    }
 }//renvoie l'action non visite
 
 int action_disponible_precedence(t_assemblage *voiture)
 {
-    printf("action disponible en cours -> ");
+    printf("AVAILABLE ACTION -> ");
     for (int i = 0; i < voiture->nombre_actions; i++) {
         for (int j = 0; j < voiture->nombre_actions; j++) {
             if(voiture->tab_actions[i].disponible!=0) {
                 for (int k = 0; k < voiture->tab_actions[j].nombre_de_precedence; k++) {
-                    if (voiture->tab_actions[j].precedence[k] == voiture->tab_actions[i].num_action && voiture->tab_actions[i].disponible!=2)
+                    if (voiture->tab_actions[j].precedence[k] == voiture->tab_actions[i].num_action && voiture->tab_actions[i].disponible!=2){
                         voiture->tab_actions[i].disponible = 0;
+                        //printf("i:%d  aa%d  aaaa%d  j%dk%d    ",i,voiture->tab_actions[j].precedence[k],voiture->tab_actions[i].num_action,j,k);
+                    }
                 }
             }
         }
     }
-    printf(" action disponible reussi\n");
+    printf(" DONE\n");
     return 1;
 }
 void ajout_precedence(actions current_action ,t_assemblage* voiture,int i){
-    printf("ajout precedence en cours ->");
+    printf("PRECEED IN PROGRESS ->");
     voiture->tab_station[i].tempstotal+=current_action.temps_action;
     voiture->tab_station[i].nombre_action+=1;
     voiture->tab_station[i].station=(int*) realloc(voiture->tab_station[i].station,sizeof (int)*voiture->tab_station[i].nombre_action);
     voiture->tab_station[i].station[i]=current_action.num_action;
     voiture->tab_actions[indice(current_action.num_action,*voiture)].disponible=2;
-    printf("%d  ",indice(current_action.num_action,*voiture));
+    //printf("%d  ",indice(current_action.num_action,*voiture));
 
 
-    printf(" ajout precedence reussi.\n");
+    printf(" DONE\n");
 }
+void afficher_action_disponible(t_assemblage voiture){
+    printf("Actions Availables : ");
+    for (int i = 0; i < voiture.nombre_actions; i++) {
+        if(voiture.tab_actions[i].disponible==1)printf("%d ",voiture.tab_actions[i].num_action);
+    }
+    printf("\n");
+}
+void MAJ_action_disp(t_assemblage *voiture) {
+    printf("debutMAJ : %d\n", voiture->nombre_actions);
 
+    for (int i = 0; i < voiture->nombre_actions; i++) {
+        int indicateur = 1;
 
+        for (int j = 0; j < voiture->tab_actions[i].nombre_de_precedence; j++) {
+            int indice_precedent = indice(voiture->tab_actions[i].precedence[j], *voiture);
 
+            if (voiture->tab_actions[indice_precedent].disponible != 2) {
+                indicateur = 0;
+                break;
+            }
+        }
 
+        if (indicateur) {
+            voiture->tab_actions[i].disponible = 1;
+        }
+    }
+}
 void fonction_generale(t_assemblage *voitures){
     int i=0;
     actions mostimportant;
@@ -54,9 +83,13 @@ void fonction_generale(t_assemblage *voitures){
     while(rechercher_actions_la_plus_importante(*voitures,voitures->tab_station[i]).disponible!=-1) {
         printf("%d\n",i);
         while (voitures->tab_station[i].tempstotal < 5) {
+
             action_disponible_precedence(voitures);
+            afficher_action_disponible( *voitures);
             mostimportant = rechercher_actions_la_plus_importante(*voitures, voitures->tab_station[i]);
             ajout_precedence(mostimportant, voitures, i);
+            MAJ_action_disp(voitures);
+
         }
         voitures->tab_station[i].nombre_action-=1;
         i+=1;
@@ -85,13 +118,14 @@ void fonction_generale(t_assemblage *voitures){
 //
 #include "Precedence.h"
 
+
 // Fonction pour remplir un tableau de Arcs avec les données du fichier precedences.txt
 void Lire_Fichier_Arcs(Tableau_arcs *tab_arcs) {
     FILE *fichier;
     int opa, opb;
 
     //ouverture du fichier
-    fichier = fopen("precedences.txt", "r");
+    fichier = fopen("..\\precedences.txt", "r");
     if (fichier == NULL) {perror("Erreur lors de l'ouverture du fichier precedences.txt"); exit(EXIT_FAILURE);}
 
     //Initialisation du tableau arcs
@@ -322,7 +356,7 @@ void liberer_memoire(Tableau_arcs *tab_arcs, Tableau_operations *tab_op) {
 // Fonction pour lire le fichier des temps des opérations
 void temps_operations(Tableau_operations *tab_op) {
     FILE *fichier;
-    fichier = fopen("operation.txt", "r");
+    fichier = fopen("..\\operation.txt", "r");
 
     if (fichier == NULL) {perror("Erreur lors de l'ouverture du fichier operation.txt");exit(EXIT_FAILURE);
     }
@@ -412,7 +446,7 @@ void Lire_Fichier_temps_cycle(Tableau_ws *tab_ws) {
     float temps_cycle;
 
     //ouverture du fichier
-    fichier = fopen("temps_cycle.txt", "r");
+    fichier = fopen("..\\temps_cycle.txt", "r");
     if (fichier == NULL) {perror("Erreur lors de l'ouverture du fichier precedences.txt"); exit(EXIT_FAILURE);}
 
     //Initialisation du tableau ws
@@ -501,7 +535,7 @@ void Ajuster_temps_cycle(Tableau_ws *tab_ws, Tableau_operations *tab_op) {
 
 }
 
-int main() {
+int mainprecedence() {
     Tableau_arcs tab_arcs;
     Tableau_operations tab_op;
     Tableau_ws tab_ws;

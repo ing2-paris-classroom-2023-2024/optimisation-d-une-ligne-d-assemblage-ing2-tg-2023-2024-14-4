@@ -6,8 +6,8 @@ int main()
 {
     t_assemblage voiture;
     recuperation_de_donnees(&voiture);
-    fonction_generale(&voiture);
-
+    //fonction_generale(&voiture);
+    mainprecedence();
 
 
     return 0;
