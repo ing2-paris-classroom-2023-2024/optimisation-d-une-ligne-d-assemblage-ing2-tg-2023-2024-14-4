@@ -11,6 +11,40 @@
 
 
 //
+
+
+
+
+typedef struct {
+    int op;                  // Numéro opération
+    int priorite;            // Priorité de l'opération
+    float temps;             // Temps de l'opération
+    float temps_avant;       // Temps cumulé des opérations précedentes
+    int *antecedents;        // Tableau des opérations précedentes
+    int nb_antecedents;      // Nombre des opérations précédentes dans le tableau
+    int ws;                  // ws affectée
+} Operations;
+
+typedef struct {
+    Operations *operations;    // tableau des operations
+    int nb_op;                 // Nombre d'operation dans le tableau
+    int nb_priorite;           // Nombre de priorité dans le tableau
+} Tableau_operations;
+typedef struct {
+    int   ws;               // Numero de la work station
+    float temps_ops;        // Temps des opérations affectées
+    float temps_restant;    // Temps restant an fonction de temps de cycle
+    int nb_ws_op;           // Nombre d'opérations affectées
+} Ws;
+
+// Structure pour stocker un tableau des WS
+typedef struct {
+    Ws *ws;               // Tableau des work station
+    int nb_ws;            // nombre  des work station
+    float temps_cycle;    // temps de cycle par work station
+} Tableau_ws;
+
+
 typedef struct station{
     int *station;
     float tempstotal;
