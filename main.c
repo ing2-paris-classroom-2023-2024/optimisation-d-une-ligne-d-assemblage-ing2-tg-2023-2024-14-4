@@ -7,5 +7,6 @@ int main()
     t_assemblage voiture;
     //recuperation_de_donnees(&voiture); //test de github
     mainprecedence();
+    printf("A");
     return 0;
 }
