@@ -120,34 +120,7 @@ void fonction_generale(t_assemblage *voitures){
 
 
 // Fonction pour remplir un tableau de Arcs avec les données du fichier precedences.txt
-void Lire_Fichier_Arcs(Tableau_arcs *tab_arcs) {
-    FILE *fichier;
-    int opa, opb;
 
-    //ouverture du fichier
-    fichier = fopen("..\\precedences.txt", "r");
-    if (fichier == NULL) {perror("Erreur lors de l'ouverture du fichier precedences.txt"); exit(EXIT_FAILURE);}
-
-    //Initialisation du tableau arcs
-    tab_arcs->arcs = NULL;
-    tab_arcs->nb_arcs = 0;
-
-    // Lecture du fichier pour alimenter les  Arcs (opa, opb et niv à 0)
-    while (fscanf(fichier, "%d %d", &opa, &opb) == 2)
-    {
-        // Ajustement dynamique de la taille du tableau arcs
-        tab_arcs->arcs = (Arcs *)realloc(tab_arcs->arcs, (tab_arcs->nb_arcs + 1) * sizeof(Arcs));
-        if (tab_arcs->arcs == NULL) { perror("Erreur lors de la réallocation de mémoire tableau arcs"); exit(EXIT_FAILURE);}
-
-        // Ajout des Arcs au tableau
-        tab_arcs->arcs[tab_arcs->nb_arcs].opa = opa;
-        tab_arcs->arcs[tab_arcs->nb_arcs].opb = opb;
-        tab_arcs->arcs[tab_arcs->nb_arcs].niv = 0;
-        tab_arcs->nb_arcs++;
-
-    } //Fin boucle while Lecture du fichier pour alimenter les  Arcs (opa, opb et niv à 0)
-    fclose(fichier);
-}
 // FIN Fonction Lire_Fichier_Arcs
 
 // Fonction pour déterminer le niveau hiérarchique des arcs (niv)
@@ -238,7 +211,7 @@ void Remplir_operations(Tableau_arcs *tab_arcs, Tableau_operations *tab_op) {
 
             // Ajustement dynamique de la taille du tableau operations
             tab_op->operations = (Operations *)realloc(tab_op->operations, (tab_op->nb_op + 1) * sizeof(Operations));
-            if (tab_op->operations == NULL) {perror("Erreur lors de la réallocation de mémoire tableau operations"); exit(EXIT_FAILURE);}
+            if (tab_op->operations == NULL) printf("Erreur lors de la réallocation de mémoire tableau operations");
 
             // Initialisation du tableau d'antécédents
             tab_op->operations[tab_op->nb_op].antecedents = NULL;
@@ -273,7 +246,7 @@ void Remplir_operations(Tableau_arcs *tab_arcs, Tableau_operations *tab_op) {
         {
             // Ajustement dynamique de la taille du tableau operations
             tab_op->operations = (Operations *)realloc(tab_op->operations, (tab_op->nb_op + 1) * sizeof(Operations));
-            if (tab_op->operations == NULL) {perror("Erreur lors de la réallocation de mémoire tableau operations");exit(EXIT_FAILURE);}
+            if (tab_op->operations == NULL)printf("Erreur lors de la réallocation de mémoire tableau operations");
 
             // Initialisation du tableau d'antécédents
             tab_op->operations[tab_op->nb_op].antecedents = NULL;
@@ -303,7 +276,7 @@ void Remplir_operations(Tableau_arcs *tab_arcs, Tableau_operations *tab_op) {
                 {
                     // Ajustement dynamique de la taille du tableau d'antécédents
                     tab_op->operations[i].antecedents = (int *)realloc(tab_op->operations[i].antecedents,(tab_op->operations[i].nb_antecedents + 1) * sizeof(int));
-                    if (tab_op->operations[i].antecedents == NULL) {perror("Erreur lors de la réallocation de mémoire tableau antecedents");exit(EXIT_FAILURE);}
+                    if (tab_op->operations[i].antecedents == NULL) printf("Erreur lors de la réallocation de mémoire tableau antecedents");
 
                     // Ajout de l'antécédent au tableau
                     tab_op->operations[i].antecedents[tab_op->operations[i].nb_antecedents] = tab_arcs->arcs[b].opa;
@@ -360,8 +333,8 @@ void temps_operations(Tableau_operations *tab_op) {
     FILE *fichier;
     fichier = fopen("..\\operation.txt", "r");
 
-    if (fichier == NULL) {perror("Erreur lors de l'ouverture du fichier operation.txt");exit(EXIT_FAILURE);
-    }
+    if (fichier == NULL) printf("Erreur lors de l'ouverture du fichier operation.txt");
+
 
     Temps_op *tableau = NULL;   // Création du tableau dynamique de structure Temps_op
     int tailleInitiale = 1;     // Taille initiale pour le tableau dynamique
@@ -381,7 +354,7 @@ void temps_operations(Tableau_operations *tab_op) {
             tableau = (Temps_op *)realloc(tableau, tailleInitiale * sizeof(Temps_op)); // Réallouer de la mémoire pour le tableau avec la nouvelle taille
 
             // Vérifier si la réallocation de mémoire a réussi
-            if (tableau == NULL) {perror("Erreur de réallocation de mémoire.\n");exit(EXIT_FAILURE);}
+            if (tableau == NULL) printf("Erreur de réallocation de mémoire.\n");
         }
 
         tableau[i].numero = numero;
@@ -413,7 +386,7 @@ void viderTampon() {
 // Fonction temps_avant
 void temps_avant(Tableau_operations *tab_op) {
 
-    int op_ant;
+    int op_ant;//operation anterieur
     int priorite =0;
     int cpt=0;
 
@@ -449,12 +422,12 @@ void Lire_Fichier_temps_cycle(Tableau_ws *tab_ws) {
 
     //ouverture du fichier
     fichier = fopen("..\\temps_cycle.txt", "r");
-    if (fichier == NULL) {perror("Erreur lors de l'ouverture du fichier precedences.txt"); exit(EXIT_FAILURE);}
+    if (fichier == NULL) printf("Erreur lors de l'ouverture du fichier precedences.txt");
 
     //Initialisation du tableau ws
     tab_ws->ws = NULL;
     tab_ws->nb_ws = 0;
-    temps_cycle = 0.0;
+    temps_cycle = 0;
 
     // Lecture du fichier pour alimenter les  ws
     while (fscanf(fichier, "%f ", &temps_cycle) == 1)
@@ -484,17 +457,17 @@ void Creer_ws(Tableau_ws *tab_ws, Tableau_operations *tab_op) {
 
                     // Ajustement dynamique de la taille du tableau ws
                     tab_ws->ws = (Ws *)realloc(tab_ws->ws, (tab_ws->nb_ws + 1) * sizeof(Ws));
-                    if (tab_ws->ws == NULL) { perror("Erreur lors de la réallocation de mémoire tableau ws"); exit(EXIT_FAILURE); }
+                    if (tab_ws->ws == NULL) printf("Erreur lors de la réallocation de mémoire tableau ws");
 
                     // Ajout d'un poste de travail
                     tab_ws->ws[tab_ws->nb_ws].ws = tab_ws->nb_ws + 1;
-                    tab_ws->ws[tab_ws->nb_ws].temps_ops = 0.00;
+                    tab_ws->ws[tab_ws->nb_ws].temps_ops = 0;
                     tab_ws->ws[tab_ws->nb_ws].temps_restant = tab_ws->temps_cycle;
                     tab_ws->ws[tab_ws->nb_ws].nb_ws_op = 0;
                     tab_ws->nb_ws++;
                 }
 
-                int nb_ws = tab_ws->nb_ws - 1;
+                int nb_ws = tab_ws->nb_ws - 1;//permet d avoir l indice de la work station
 
                 // Mise à jour des informations de l'opération et du poste de travail
                 tab_op->operations[op].ws = tab_ws->nb_ws;
@@ -519,7 +492,7 @@ void Ajuster_temps_cycle(Tableau_ws *tab_ws, Tableau_operations *tab_op) {
 
         for (int k = 0; k < tab_op->nb_op; k++) { tab_op->operations[k].ws = 0 ; } // on reinitialise les operations sur ws=0
 
-        temps_cycle -= .1;
+        temps_cycle -= 0.1;
         tab_ws->ws = NULL;
         tab_ws->nb_ws = 0;
         tab_ws->temps_cycle = temps_cycle;
@@ -681,7 +654,6 @@ int mainprecedence() {
 
     // Libération de la mémoire allouée pour les tableaux
     liberer_memoire(&tab_arcs, &tab_op);
-
 
 
 

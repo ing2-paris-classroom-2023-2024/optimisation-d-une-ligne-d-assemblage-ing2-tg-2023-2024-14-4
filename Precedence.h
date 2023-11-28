@@ -31,17 +31,7 @@ typedef struct {
 
 
 // Structure pour stocker les Arcs
-typedef struct {
-    int opa;        // opération depart
-    int opb;        // opération arrivée
-    int niv;        // Niveau herarchique de l'arc
-} Arcs;
 
-// Structure pour stocker un tableau d' Arcs
-typedef struct {
-    Arcs *arcs;      // tableau des arcs
-    int nb_arcs;     // Nombre arcs dans le tableau
-} Tableau_arcs;
 
 // Structure pour stocker un tableau d'Operations
 
