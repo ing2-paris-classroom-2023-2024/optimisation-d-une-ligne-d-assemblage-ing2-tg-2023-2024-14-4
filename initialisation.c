@@ -4,14 +4,10 @@
 #include "Header_general.h"
 
 int indice(int valeurdelaction,t_assemblage voiture){
-
-
-    for (int i = 0; i < voiture.nombre_actions; i++) {
-        //printf("   %d",voiture.tab_actions[i].num_action);
+    for (int i = 0; i < voiture.nombre_stations; i++) {
         if(voiture.tab_actions[i].num_action==valeurdelaction)return i;
     }
-    printf("]probleme lors de la fonction indice\n");
-    EXIT_FAILURE;
+    printf("probleme lors de la fonction indice");
     return 0;
 }
 void Lire_Fichier_Arcs(Tableau_arcs *tab_arcs) {
@@ -48,7 +44,6 @@ void recuperation_de_donnees(t_assemblage *voiture) {
     if (fichier == NULL)printf("probleme ouverture fichier operation");
     int i = 0;
     voiture->tab_actions=NULL;
-    voiture->tempsparstation=5;
     do {
         voiture->tab_actions = (actions *) realloc(voiture->tab_actions, sizeof(actions) * (i + 1));
         i++;
@@ -62,10 +57,10 @@ void recuperation_de_donnees(t_assemblage *voiture) {
         voiture->tab_actions[j].nombre_de_precedence=0;
         voiture->tab_actions[j].precedence=NULL;
         voiture->tab_actions[j].exclusion=NULL;
-        voiture->tab_actions[j].disponible=1;
+        voiture->tab_actions[j].disponible=0;
     }
-    fichier = fopen("..\\exclusions.txt", "r");
-    if (fichier == NULL)printf("probleme ouverture fichier exclusions");
+    fichier = fopen("..\\exclusion.txt", "r");
+    if (fichier == NULL)printf("probleme ouverture fichier");
     int action_temp;
     i = 0;
     do {
@@ -95,4 +90,3 @@ void recuperation_de_donnees(t_assemblage *voiture) {
     voiture->tab_station[0].station=(int*) malloc(sizeof (int)*1);
     voiture->nombre_stations=1;
 }
- // tes

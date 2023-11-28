@@ -5,11 +5,7 @@
 int main()
 {
     t_assemblage voiture;
-    recuperation_de_donnees(&voiture);
-    //fonction_generale(&voiture);
+    //recuperation_de_donnees(&voiture); //test de github
     mainprecedence();
-    // testprecedence();
-
-
     return 0;
 }

@@ -405,7 +405,7 @@ void temps_avant(Tableau_operations *tab_op) {
                     for (int j = 0; j < tab_op->nb_op; j++) {
                         if (tab_op->operations[j].op == op_ant)
                         {tab_op->operations[i].temps_avant =  tab_op->operations[j].temps+tab_op->operations[j].temps_avant;
-                            ;cpt = priorite+1;}
+                            cpt = priorite+1;}
 
                     }
                 }
@@ -654,6 +654,7 @@ int mainprecedence() {
 
     // Libération de la mémoire allouée pour les tableaux
     liberer_memoire(&tab_arcs, &tab_op);
+
 
 
 

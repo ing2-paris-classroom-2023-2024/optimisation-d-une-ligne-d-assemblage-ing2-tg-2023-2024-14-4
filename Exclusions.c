@@ -6,7 +6,7 @@ int TestExclusion(int Action1,int Action2)
     int nbExclusions=0;
     int nb1;
     int nb2;
-    int actions;
+    int nbActions;
     int ActionCherchee=1;         // Variable où on cherche les exclusions de chaque action
     int tabExclusions[36][35];    // Tableau qui stocke 36 lignes car on utilise pas la ligne 0 qui correspond aux nombres d'actions et 35 qui correspond aux nombres d'exclusions de chaque actions qui est au maximum de 34 plus le nombres d'exclusions de l'action.
     for(int actions=0;actions<=35;actions++)
@@ -22,7 +22,7 @@ int TestExclusion(int Action1,int Action2)
     }
     while(ActionCherchee<=35)                              // On parcours les 35 actions
     {
-        listeExclusions=fopen("exclusions.txt","r");
+        listeExclusions=fopen("..\\exclusions.txt","r");
         while(feof(listeExclusions)==0)
         {
             fscanf(listeExclusions,"%d",&nb1);
@@ -36,29 +36,28 @@ int TestExclusion(int Action1,int Action2)
         ActionCherchee++;                                // On change la valeur de l'action
     }
     fclose(listeExclusions);
-    for(actions=0;actions<=35;actions++)
+    for(nbActions=0;nbActions<=35;nbActions++)
     {
-        printf("Action : %d : ",actions);                // Prendre les valeurs
+        printf("Action : %d : ",nbActions);                // Prendre les valeurs
         for(int j=0;j<=34;j++)
         {
-            printf("%d ",tabExclusions[actions][j]);
+            printf("%d ",tabExclusions[nbActions][j]);
         }
         printf("\n");
     }
-    for(actions=1;actions<=34;actions++)
+    for(nbActions=1;nbActions<=34;nbActions++)
     {
-        if(Action2==tabExclusions[Action1][actions])  // Il teste si 2 actions peuvent être ensembles, si il y'a un de ces chiffres dans la ligne alors il ne peuvent pas être ensemble.
+        if(Action2==tabExclusions[Action1][nbActions])  // Il teste si 2 actions peuvent être ensembles, si il y'a un de ces chiffres dans la ligne alors il ne peuvent pas être ensemble.
         {
             return 0;
         }
     }
-    for(actions=1;actions<=34;actions++)
+    for(nbActions=1;nbActions<=34;nbActions++)
     {
-        if(Action1==tabExclusions[Action2][actions])  // Il teste si 2 actions peuvent être ensembles ex :
+        if(Action1==tabExclusions[Action2][nbActions])  // Il teste si 2 actions peuvent être ensembles, comme le test précedent, mais en prenant en compte d'abord la 2ème action
         {
             return 0;
         }
-
     }
     return 1;
 }
@@ -71,9 +70,8 @@ int Exclusion()
     Stations=(t_station*)malloc(sizeof(t_station)*1);
     if(Stations->station==NULL)
         printf("Pb de creation de stations\n");
-    printf("Nombre total de stations: %d\n",Stations->station);
-    int valeurAction1=31;
-    int valeurAction2=10;
+    int valeurAction1=8;
+    int valeurAction2=21;
     if(TestExclusion(valeurAction1,valeurAction2)==0)
     {
         printf("Les actions %d et %d ne peuvent pas se situer dans la meme station.\n",valeurAction1,valeurAction2);
@@ -82,7 +80,7 @@ int Exclusion()
     {
         printf("Les actions %d et %d peuvent se situer dans la meme station.\n",valeurAction1,valeurAction2);
     }
-    printf("Bonjour\n");
+    printf("Nombre total de stations: %d\n",Stations->station);
     return 0;
 }
 

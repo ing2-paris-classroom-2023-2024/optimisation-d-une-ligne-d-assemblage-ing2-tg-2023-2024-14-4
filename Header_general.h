@@ -9,7 +9,6 @@
 #include"time.h"
 #include"string.h"
 
-
 //
 
 
@@ -60,10 +59,11 @@ typedef struct station{
     float tempstotal;
     int nombre_action;
 }t_station;
+
 typedef struct actions_duree
 {
     int num_action;
-    int disponible;//est ce que l action est deja dans l assemblage ou pas
+    int disponible;               //est ce que l action est deja dans l assemblage ou pas
     float temps_action;
     int *precedence;
     int nombre_de_precedence;
@@ -71,15 +71,13 @@ typedef struct actions_duree
     int nombre_de_exclusion;
 }actions;
 
-
-
 typedef struct assemblage
 {
     t_station *tab_station;
     actions *tab_actions;
     int nombre_actions;
     int nombre_stations;
-    float tempsparstation;
+    float tempsparStation;
 }t_assemblage;
 
 int indice(int valeurdelastation,t_assemblage voiture);
