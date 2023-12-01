@@ -19,6 +19,14 @@ typedef struct {
     int niv;        // Niveau herarchique de l'arc
 } Arcs;
 
+typedef struct {
+    int opa;
+    int opb;
+}exclusions;
+typedef struct{
+    exclusions *ex;
+    int nombre_ex;
+}tab_exclusions;
 // Structure pour stocker un tableau d' Arcs
 typedef struct {
     Arcs *arcs;      // tableau des arcs
@@ -54,33 +62,6 @@ typedef struct {
 } Tableau_ws;
 
 
-typedef struct station{
-    int *station;
-    float tempstotal;
-    int nombre_action;
-}t_station;
 
-typedef struct actions_duree
-{
-    int num_action;
-    int disponible;               //est ce que l action est deja dans l assemblage ou pas
-    float temps_action;
-    int *precedence;
-    int nombre_de_precedence;
-    int *exclusion;
-    int nombre_de_exclusion;
-}actions;
-
-typedef struct assemblage
-{
-    t_station *tab_station;
-    actions *tab_actions;
-    int nombre_actions;
-    int nombre_stations;
-    float tempsparStation;
-}t_assemblage;
-
-int indice(int valeurdelastation,t_assemblage voiture);
-void recuperation_de_donnees(t_assemblage *voiture);
 
 #endif //PROJETS1_HEADER_GENERAL_H

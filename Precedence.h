@@ -19,6 +19,7 @@ void afficher_action_disponible(t_assemblage voiture);
 #include <stdio.h>
 #include <stdlib.h>
 #include "Header_general.h"
+#include "Exclusions.h"
 /***************************************************STRUCTURES*********************************************************/
 // Structure pour stocker les temps des opérations
 typedef struct {
@@ -50,13 +51,13 @@ int compare_operations(const void *a, const void *b);
 void Trier_operations(Tableau_operations *tab_op);
 void liberer_memoire(Tableau_arcs *tab_arcs, Tableau_operations *tab_op);
 void temps_operations(Tableau_operations *tab_op);
-void viderTampon();
+
 void temps_avant(Tableau_operations *tab_op);
 void Lire_Fichier_temps_cycle(Tableau_ws *tab_ws);
-void Creer_ws(Tableau_ws *tab_ws, Tableau_operations *tab_op);
-void Ajuster_temps_cycle(Tableau_ws *tab_ws, Tableau_operations *tab_op);
+
 int mainprecedence();
 
+void creerOptimiserStationsAvecCycle(Tableau_operations *tab_op, Tableau_ws *tab_ws);
 
 
 

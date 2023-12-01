@@ -3,9 +3,11 @@
 #define PROJETS1_EXCLUSIONS_H
 
 #include "Header_general.h"
+#include "Precedence.h"
 
-int TestExclusion(int Action1,int Action2);
-int Exclusion();
+void recuperation_donnees(tab_exclusions *a);
+
+int mainexclusions();
 
 
 #endif //PROJETS1_EXCLUSIONS_H
