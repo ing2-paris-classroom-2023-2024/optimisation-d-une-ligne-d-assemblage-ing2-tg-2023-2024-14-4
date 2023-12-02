@@ -22,6 +22,7 @@ typedef struct {
 typedef struct {
     int opa;
     int opb;
+    int occurence;
 }exclusions;
 typedef struct{
     exclusions *ex;
@@ -33,13 +34,16 @@ typedef struct {
     int nb_arcs;     // Nombre arcs dans le tableau
 } Tableau_arcs;
 typedef struct {
-    int op;                  // Numéro opération
+    int op;
+    int indice;// Numéro opération
     int priorite;            // Priorité de l'opération
     float temps;             // Temps de l'opération
     float temps_avant;       // Temps cumulé des opérations précedentes
     int *antecedents;        // Tableau des opérations précedentes
     int nb_antecedents;      // Nombre des opérations précédentes dans le tableau
-    int ws;                  // ws affectée
+    int ws;    // ws affectée
+    int *ex;
+    int nombre_ex;
 } Operations;
 
 typedef struct {
@@ -52,6 +56,7 @@ typedef struct {
     float temps_ops;        // Temps des opérations affectées
     float temps_restant;    // Temps restant an fonction de temps de cycle
     int nb_ws_op;           // Nombre d'opérations affectées
+    int*tab_op;
 } Ws;
 
 // Structure pour stocker un tableau des WS

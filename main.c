@@ -7,7 +7,8 @@ int main()
 
 
     mainprecedence();
-    mainexclusions();
+    mainex2();
+
 
 
     return 0;

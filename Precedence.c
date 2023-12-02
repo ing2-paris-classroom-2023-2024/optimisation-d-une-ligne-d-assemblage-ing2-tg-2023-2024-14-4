@@ -10,36 +10,7 @@
 // FIN Fonction Lire_Fichier_Arcs
 
 // Fonction pour déterminer le niveau hiérarchique des arcs (niv)
-void Hierarchie_Arcs(Tableau_arcs *tab_arcs) {
-    int cpt=0;
-    int i = -1;
 
-    do { i++;   // Boucle index i
-
-        for (int a = 0; a < tab_arcs->nb_arcs; a++) {
-                                    //Parcours le niveau hiérarchique des arcs du tableau tab_arcs index=a
-            int niva = tab_arcs->arcs[a].niv;
-
-            if (niva == i) {                                   //Si niveau hiérarchique de l'arc (niva) = i alors..
-                int opa = tab_arcs->arcs[a].opa;
-
-                for (int b = 0; b < tab_arcs->nb_arcs; b++) {  //Parcours le niveau hiérarchique des arcs du tableau tab_arcs index=b
-                    int nivb = tab_arcs->arcs[b].niv;
-
-                    if (nivb >= i) {                           //Si niveau hiérarchique de l'arc (nivb) >= i et..
-                        int opb = tab_arcs->arcs[b].opb;
-
-                        if (opa == opb) {                      //Si op du Parcours a =  op du Parcours b alors..
-                            tab_arcs->arcs[a].niv = i + 1;     //Mise à jour du niveau hiérarchique de l'arc index=a avec i+1 et mise a jour cpt = i + 1
-                            cpt = i + 1;
-
-                        } //Fin    Si op du Parcours a =  op du Parcours b alors
-                    }     //Fin    Si niveau hiérarchique de l'arc (nivb) >= i et..
-                } 		  //Fin    Parcours le niveau hiérarchique des arcs du tableau tab_arcs index=b
-            }             //Fin    Si niveau hiérarchique de l'arc (niva) = i alors..
-        }                 //Fin    Parcours le  niveau hiérarchique des arcs du tableau tab_arcs index=a
-    } while (cpt > i);    //Sortie si cpt est supérieur à i la boucle ne trouve plus de niveau supérieur
-}
 
 
 ///LEs arcs sont tries avec tab_arc->arcs[b].niv plus l'arc est loin du point de depart plus son niveau est eleve
@@ -233,49 +204,65 @@ void liberer_memoire(Tableau_arcs *tab_arcs, Tableau_operations *tab_op) {
 // FIN liberer_memoire
 
 // Fonction pour lire le fichier des temps des opérations
+// Fonction pour mettre à jour le tableau des opérations avec les temps
 void temps_operations(Tableau_operations *tab_op) {
     FILE *fichier;
     fichier = fopen("..\\operation.txt", "r");
 
-    if (fichier == NULL) printf("Erreur lors de l'ouverture du fichier operation.txt");
+    if (fichier == NULL) {
+        printf("Erreur lors de l'ouverture du fichier operation.txt\n");
+        return;
+    }
 
+    Temps_op *tableau = NULL;
+    int tailleInitiale = 1;
+    tableau = (Temps_op *)malloc(tailleInitiale * sizeof(Temps_op));
 
-    Temps_op *tableau = NULL;   // Création du tableau dynamique de structure Temps_op
-    int tailleInitiale = 1;     // Taille initiale pour le tableau dynamique
-    tableau = (Temps_op *)malloc(tailleInitiale * sizeof(Temps_op)); // Allocation de la mémoire pour le tableau dynamique
+    if (tableau == NULL) {
+        printf("Erreur d'allocation de mémoire pour le tableau Temps_op\n");
+        fclose(fichier);
+        return;
+    }
 
     int i = 0;
     int numero;
     float temps;
+    rewind(fichier);
 
-
-    // Lecture du fichier ligne par ligne
     while (fscanf(fichier, "%d %f", &numero, &temps) == 2) {
-        i++; // Incrémentation  de i après chaque lecture réussie
-        // Vérification de la taille allouée
-        if (i >= tailleInitiale) {
-            tailleInitiale++; // Incrémentation la taille du tableau dynamique
-            tableau = (Temps_op *)realloc(tableau, tailleInitiale * sizeof(Temps_op)); // Réallouer de la mémoire pour le tableau avec la nouvelle taille
 
-            // Vérifier si la réallocation de mémoire a réussi
-            if (tableau == NULL) printf("Erreur de réallocation de mémoire.\n");
+        if (i >= tailleInitiale) {
+            tailleInitiale++;
+            tableau = (Temps_op *)realloc(tableau, tailleInitiale * sizeof(Temps_op));
+            if (tableau == NULL) {
+                printf("Erreur de réallocation de mémoire pour le tableau Temps_op\n");
+                fclose(fichier);
+                return;
+            }
         }
 
         tableau[i].numero = numero;
         tableau[i].temps  = temps;
+        i++;
     }
+    tab_op->nb_op = i;
 
+    for (int k = 0; k < tab_op->nb_op; k++) {
 
-    for (int i = 0; i < tab_op->nb_op; i++)
-    {
-        for (int j = 0;j < tailleInitiale; j++) {
-            if (tableau[j].numero == tab_op->operations[i].op) {
-                tab_op->operations[i].temps = tableau[j].temps;
+        for (int j = 0; j < tailleInitiale; j++) {
+
+            if (tableau[j].numero == tab_op->operations[k].op) {
+                tab_op->operations[k].temps = tableau[j].temps;
             }
         }
     }
+
     free(tableau);
+
+    fclose(fichier);
 }
+
+
 // FIN temps_operations
 
 // Fonction Vider le tampon
@@ -283,35 +270,7 @@ void temps_operations(Tableau_operations *tab_op) {
 // FIN Fonction Vider le tampon
 
 // Fonction temps_avant
-void temps_avant(Tableau_operations *tab_op) {
 
-    int op_ant;//operation anterieur
-    int priorite =0;
-    int cpt=0;
-
-
-    do { priorite++;
-
-        for (int i = 0; i < tab_op->nb_op; i++)
-        {
-
-            if (priorite == tab_op->operations[i].priorite) {
-
-                for (int ant = 0; ant < tab_op->operations[i].nb_antecedents; ant++) {
-
-                    op_ant = tab_op->operations[i].antecedents[ant];
-
-                    for (int j = 0; j < tab_op->nb_op; j++) {
-                        if (tab_op->operations[j].op == op_ant)
-                        {tab_op->operations[i].temps_avant =  tab_op->operations[j].temps+tab_op->operations[j].temps_avant;
-                            cpt = priorite+1;}
-
-                    }
-                }
-            }
-        }
-    } while (cpt >  priorite );
-}
 //progressivement en allant de 0 a la fin des priorite ont actualise les temps min avant
 // FIN Fonction temps_avant
 
@@ -336,6 +295,7 @@ void Lire_Fichier_temps_cycle(Tableau_ws *tab_ws) {
         tab_ws->temps_cycle = temps_cycle;
 
     }
+
     fclose(fichier);
 }
 // FIN Fonction Lire_Fichier_temps_cycle
@@ -345,7 +305,13 @@ void Lire_Fichier_temps_cycle(Tableau_ws *tab_ws) {
 
 
 
-void creerOptimiserStationsAvecCycle(Tableau_operations *tab_op, Tableau_ws *tab_ws) {
+#include <stdio.h>
+#include "Precedence.h"
+
+// ... (Déclarations des structures et autres fonctions)
+
+// Fonction pour créer et optimiser les stations en tenant compte des cycles et des dépendances
+void creerOptimiserStationsAvecCycleEtPrecedence(Tableau_operations *tab_op, Tableau_ws *tab_ws) {
     int numeroStation = 1;
 
     // Initialisation des workstations
@@ -359,26 +325,38 @@ void creerOptimiserStationsAvecCycle(Tableau_operations *tab_op, Tableau_ws *tab
         if (tab_op->operations[i].ws == 0) {
             float tempsOperation = tab_op->operations[i].temps;
 
-            // Attribuer la workstation et afficher les opérations attribuées à cette workstation
-            tab_op->operations[i].ws = numeroStation;
-            printf("Station %d : \nOp%d tpscumule:%.2f\n", numeroStation, tab_op->operations[i].op,tab_op->operations[i].temps);
-
-            // Attribuer les opérations suivantes dans le temps de cycle à la même workstation
-            for (int j = i + 1; j < tab_op->nb_op; j++) {
-                if (tab_op->operations[j].ws == 0) {
-                    float tempsOperationSuivante = tab_op->operations[j].temps;
-
-                    if ((tempsOperation + tempsOperationSuivante) <= tab_ws->temps_cycle) {
-                        // L'opération suivante peut être ajoutée à la workstation sans dépasser le temps de cycle
-                        tab_op->operations[j].ws = numeroStation;
-                        tempsOperation += tempsOperationSuivante;
-                        printf("Op%d tpscumule %.2f\n", tab_op->operations[j].op,tempsOperation);
-                    }
+            // Vérifier si toutes les opérations antérieures ont été effectuées
+            int precedencesEffectuees = 1;
+            for (int k = 0; k < tab_op->operations[i].nb_antecedents; k++) {
+                int antecedent = tab_op->operations[i].antecedents[k];
+                if (tab_op->operations[antecedent].ws == 0) {
+                    precedencesEffectuees = 0;
+                    break;
                 }
             }
 
-            printf("\n");
-            numeroStation++;
+            if (precedencesEffectuees) {
+                // Attribuer la workstation et afficher les opérations attribuées à cette workstation
+                tab_op->operations[i].ws = numeroStation;
+                printf("Station %d : \nOp%d tpscumule:%.2f\n", numeroStation, tab_op->operations[i].op, tab_op->operations[i].temps);
+
+                // Attribuer les opérations suivantes dans le temps de cycle à la même workstation
+                for (int j = i + 1; j < tab_op->nb_op; j++) {
+                    if (tab_op->operations[j].ws == 0) {
+                        float tempsOperationSuivante = tab_op->operations[j].temps;
+
+                        if ((tempsOperation + tempsOperationSuivante) <= tab_ws->temps_cycle) {
+                            // L'opération suivante peut être ajoutée à la workstation sans dépasser le temps de cycle
+                            tab_op->operations[j].ws = numeroStation;
+                            tempsOperation += tempsOperationSuivante;
+                            printf("Op%d tpscumule %.2f\n", tab_op->operations[j].op, tempsOperation);
+                        }
+                    }
+                }
+
+                printf("\n");
+                numeroStation++;
+            }
         }
     }
 
@@ -386,21 +364,23 @@ void creerOptimiserStationsAvecCycle(Tableau_operations *tab_op, Tableau_ws *tab
     printf("Nombre total de stations : %d\n", numeroStation - 1);
 }
 
+
 int mainprecedence() {
     Tableau_arcs tab_arcs;
     Tableau_operations tab_op;
     Tableau_ws tab_ws;
 
     Lire_Fichier_Arcs(&tab_arcs);
-    Hierarchie_Arcs(&tab_arcs);
+
     Trier_arcs(&tab_arcs);
     Remplir_operations(&tab_arcs, &tab_op);
     Trier_operations(&tab_op);
     temps_operations(&tab_op);
-    temps_avant(&tab_op);
+    //mainexclusions(&tab_op);
+
     Lire_Fichier_temps_cycle(&tab_ws);
 
-    creerOptimiserStationsAvecCycle(&tab_op, &tab_ws);
+    creerOptimiserStationsAvecCycleEtPrecedence(&tab_op, &tab_ws);
 
     liberer_memoire(&tab_arcs, &tab_op);
 

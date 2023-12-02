@@ -57,7 +57,7 @@ void Lire_Fichier_temps_cycle(Tableau_ws *tab_ws);
 
 int mainprecedence();
 
-void creerOptimiserStationsAvecCycle(Tableau_operations *tab_op, Tableau_ws *tab_ws);
+void creerOptimiserStationsAvecCycleEtPrecedence(Tableau_operations *tab_op, Tableau_ws *tab_ws);
 
 
 
