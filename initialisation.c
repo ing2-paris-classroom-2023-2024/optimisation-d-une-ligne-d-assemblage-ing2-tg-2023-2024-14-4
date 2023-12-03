@@ -11,7 +11,7 @@ int indice(int valeurdelaction,Tableau_operations voiture){
     }
     printf("probleme lors de la fonction indice");
     return 0;
-}/*
+}
 void Lire_Fichier_Arcs(Tableau_arcs *tab_arcs) {
     FILE *fichier;
     int opa, opb;
@@ -39,7 +39,7 @@ void Lire_Fichier_Arcs(Tableau_arcs *tab_arcs) {
 
     } //Fin boucle while Lecture du fichier pour alimenter les  Arcs (opa, opb et niv à 0)
     fclose(fichier);
-}
+}/*
 void verificationexclusions(Tableau_operations* tab_op, Tableau_ws *tab_ws,int numero){
     for (int i = 0; i < tab_op->nb_op; i++) {
 
