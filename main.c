@@ -8,7 +8,7 @@ int main()
 
     mainprecedence();
     mainex2();
-    //mainexplusprecedence();
+    mainexplusprecedence();
 
 
 

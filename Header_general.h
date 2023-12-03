@@ -8,6 +8,7 @@
 #include"stdlib.h"
 #include"time.h"
 #include"string.h"
+#include <stdbool.h>
 
 //
 
@@ -67,10 +68,14 @@ typedef struct {
 } Tableau_ws;
 int indice(int valeurdelaction,Tableau_operations voiture);
 void creerOptimiserStationsAvecCycleEtPrecedenceetex(Tableau_operations* tab_op, Tableau_ws *tab_ws);
+bool aDesExclusionsAvecLaStation(Tableau_operations *tab_op, int index, int station);
 int mainexplusprecedence();
 int estValideAvecStation(Tableau_operations *tab_op, int opA, int station);
 int estValideAvecExclusions(Tableau_operations *tab_op, int opA, int opB);
 int estValideAvecExclusionsEtStation(Tableau_operations *tab_op, int opA, int opB, int station);
+bool toutesLesContraintesDePrecedencesSontSatisfaites(Tableau_operations *tab_op, int index);
+void creerOptimiserStationsAvecCyclea(Tableau_operations *tab_op, Tableau_ws *tab_ws);
+int mainexplusprecedence();
 
 
 
