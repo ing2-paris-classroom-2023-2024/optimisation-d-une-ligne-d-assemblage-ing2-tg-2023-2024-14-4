@@ -5,9 +5,11 @@
 int main()
 {
 
-
+    printf("programme de precedence :\n\n");
     mainprecedence();
+    printf("programme d'exclusion' :\n\n");
     mainex2();
+    printf("programme d'exclusion et de precedence :\n\n");
     mainexplusprecedence();
 
 

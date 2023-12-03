@@ -350,14 +350,14 @@ void creerOptimiserStationsAvecCycle(Tableau_operations *tab_op, Tableau_ws *tab
 
     // Initialisation des workstations
     for (int i = 0; i < tab_op->nb_op; i++) {
-        tab_op->operations[i].ws = 0; // Aucune workstation attribuée initialement
+        tab_op->operations[i].ws = 0; // pas de station attribuée initialement
     }
 
-    int operationsNonAttribuees = 1; // Flag pour suivre si toutes les opérations ont été attribuées
+    int operationsNonAttribuees = 1; // indice pour savoir si toutes les operations ont ete attribue
 
     // Tant qu'il reste des opérations non attribuées
     while (operationsNonAttribuees==1) {
-        operationsNonAttribuees = 0; // Réinitialiser le flag
+        operationsNonAttribuees = 0; // Réinitialiser l indice
 
         // Boucle principale pour attribuer les opérations aux workstations en tenant compte du temps de cycle
         for (int i = 0; i < tab_op->nb_op; i++) {

@@ -40,29 +40,30 @@ void Lire_Fichier_Arcs(Tableau_arcs *tab_arcs) {
     } //Fin boucle while Lecture du fichier pour alimenter les  Arcs (opa, opb et niv à 0)
     fclose(fichier);
 }
-bool toutesLesContraintesDePrecedencesSontSatisfaites(Tableau_operations *tab_op, int index) {
-    for (int i = 0; i < tab_op->operations[index].nb_antecedents; i++) {
-        int antecedent = tab_op->operations[index].antecedents[i];
-        if (tab_op->operations[indice(antecedent, *tab_op)].ws == 0) {
-            return false;  // Retourner false si l'une des contraintes de précédence n'est pas satisfaite
-        }
-    }
-    return true;  // Toutes les contraintes de précédence sont satisfaites
-}
 
-// Fonction pour vérifier si une opération a des exclusions avec les opérations déjà attribuées à une station
+
 bool aDesExclusionsAvecLaStation(Tableau_operations *tab_op, int index, int station) {
     for (int i = 0; i < tab_op->nb_op; i++) {
         if (tab_op->operations[i].ws == station) {
             for (int j = 0; j < tab_op->operations[index].nombre_ex; j++) {
                 int exclusion = tab_op->operations[index].ex[j];
                 if (exclusion == tab_op->operations[i].op) {
-                    return true;  // Retourner true si l'opération a une exclusion avec une opération déjà attribuée à la station
+                    return true;
                 }
             }
         }
     }
-    return false;  // Aucune exclusion avec les opérations déjà attribuées à la station
+    return false;
+}
+
+bool toutesLesContraintesDePrecedenceSontSatisfaitesa(Tableau_operations *tab_op, int index) {
+    for (int i = 0; i < tab_op->operations[index].nb_antecedents; i++) {
+        int antecedent = tab_op->operations[index].antecedents[i];
+        if (tab_op->operations[indice(antecedent,*tab_op)].ws == 0) {
+            return false; // Contrainte de précédence violée
+        }
+    }
+    return true; // Toutes les contraintes sont satisfaites
 }
 
 void creerOptimiserStationsAvecCyclea(Tableau_operations *tab_op, Tableau_ws *tab_ws) {
@@ -73,70 +74,48 @@ void creerOptimiserStationsAvecCyclea(Tableau_operations *tab_op, Tableau_ws *ta
         tab_op->operations[i].ws = 0; // Aucune workstation attribuée initialement
     }
 
-    int operationsNonAttribuees = 1; // Flag pour suivre si toutes les opérations ont été attribuées
+    int operationsAttribuees = 0;
 
-    // Tant qu'il reste des opérations non attribuées
-    while (operationsNonAttribuees == 1) {
-        operationsNonAttribuees = 0; // Réinitialiser le flag
+    // Boucle principale pour attribuer les opérations aux workstations
+    while (operationsAttribuees < tab_op->nb_op) {
+        float tempsOperation = 0;
 
-        // Boucle principale pour attribuer les opérations aux workstations en tenant compte du temps de cycle
+        // Attribuer autant d'opérations que possible dans le temps de cycle à la même workstation
         for (int i = 0; i < tab_op->nb_op; i++) {
-            // Si l'opération n'a pas de workstation attribuée, toutes les contraintes de précédence sont satisfaites,
-            // et aucune exclusion avec les opérations déjà attribuées à la station
-            if (tab_op->operations[i].ws == 0 && toutesLesContraintesDePrecedenceSontSatisfaites(tab_op, i)
-                && !aDesExclusionsAvecLaStation(tab_op, i, numeroStation)) {
+            if (tab_op->operations[i].ws == 0 &&
+                toutesLesContraintesDePrecedenceSontSatisfaitesa(tab_op, i) &&
+                !aDesExclusionsAvecLaStation(tab_op, i, numeroStation) &&
+                (tempsOperation + tab_op->operations[i].temps) <= tab_ws->temps_cycle) {
 
-                float tempsOperation = tab_op->operations[i].temps;
-
-                // Attribuer la workstation et afficher les opérations attribuées à cette workstation
                 tab_op->operations[i].ws = numeroStation;
-                printf("Station %d  : Op%d ", numeroStation, tab_op->operations[i].op);
+                tempsOperation += tab_op->operations[i].temps;
+                printf("Station %d : Op%d ", numeroStation, tab_op->operations[i].op);
+                operationsAttribuees++;
 
-                // Attribuer autant d'opérations suivantes que possible dans le temps de cycle à la même workstation
-                for (int j = i + 1; j < tab_op->nb_op; j++) {
-                    if (tab_op->operations[j].ws == 0) {
-                        // Vérifier si toutes les opérations précédentes ont été effectuées (sont présentes dans une station)
-                        bool prereqsDone = true;
+                // Vérifier s'il existe d'autres opérations qui peuvent être ajoutées à la même station
+                for (int j = 0; j < tab_op->nb_op; j++) {
+                    if (tab_op->operations[j].ws == 0 &&
+                        toutesLesContraintesDePrecedenceSontSatisfaitesa(tab_op, j) &&
+                        !aDesExclusionsAvecLaStation(tab_op, j, numeroStation) &&
+                        (tempsOperation + tab_op->operations[j].temps) <= tab_ws->temps_cycle) {
 
-                        for (int k = 0; k < tab_op->operations[j].nb_antecedents; k++) {
-                            int antecedent = tab_op->operations[j].antecedents[k];
-
-                            if (tab_op->operations[indice(antecedent, *tab_op)].ws == 0) {
-                                prereqsDone = false;
-                                break;  // Sortir de la boucle dès qu'une opération précédente n'est pas effectuée
-                            }
-                        }
-
-                        if (prereqsDone) {
-                            float tempsOperationSuivante = tab_op->operations[j].temps;
-
-                            if ((tempsOperation + tempsOperationSuivante) <= tab_ws->temps_cycle
-                                && !aDesExclusionsAvecLaStation(tab_op, j, numeroStation)) {
-                                // L'opération suivante peut être ajoutée à la workstation sans dépasser le temps de cycle
-                                // et sans avoir d'exclusions avec les opérations déjà attribuées à la station
-                                tab_op->operations[j].ws = numeroStation;
-                                tempsOperation += tempsOperationSuivante;
-                                printf("Op%d ", tab_op->operations[j].op);
-                            }
-                        }
+                        tab_op->operations[j].ws = numeroStation;
+                        tempsOperation += tab_op->operations[j].temps;
+                        printf("Op%d ", tab_op->operations[j].op);
+                        operationsAttribuees++;
                     }
                 }
 
-                // Afficher le temps restant dans la station
-                printf("(temps restant : %.2f)\n",tab_ws->temps_cycle-tempsOperation);
+                printf("(temps restant : %.2f)\n", tab_ws->temps_cycle - tempsOperation);
                 numeroStation++;
-            }
-        }
-
-        // Vérifier s'il reste des opérations non attribuées
-        for (int k = 0; k < tab_op->nb_op; k++) {
-            if (tab_op->operations[k].ws == 0) {
-                operationsNonAttribuees = 1;
-                break;
+                break; // Passer à la station suivante
             }
         }
     }
 }
+
+
+
 
 
 
