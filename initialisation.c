@@ -11,7 +11,7 @@ int indice(int valeurdelaction,Tableau_operations voiture){
     }
     printf("probleme lors de la fonction indice");
     return 0;
-}
+}/*
 void Lire_Fichier_Arcs(Tableau_arcs *tab_arcs) {
     FILE *fichier;
     int opa, opb;
@@ -191,3 +191,4 @@ int mainexplusprecedence(){
 
     return 0;
 }
+*/
