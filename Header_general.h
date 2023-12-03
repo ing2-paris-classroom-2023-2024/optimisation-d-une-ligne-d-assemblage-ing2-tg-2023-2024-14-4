@@ -65,11 +65,13 @@ typedef struct {
     int nb_ws;            // nombre  des work station
     float temps_cycle;    // temps de cycle par work station
 } Tableau_ws;
+int indice(int valeurdelaction,Tableau_operations voiture);
 void creerOptimiserStationsAvecCycleEtPrecedenceetex(Tableau_operations* tab_op, Tableau_ws *tab_ws);
 int mainexplusprecedence();
 int estValideAvecStation(Tableau_operations *tab_op, int opA, int station);
 int estValideAvecExclusions(Tableau_operations *tab_op, int opA, int opB);
 int estValideAvecExclusionsEtStation(Tableau_operations *tab_op, int opA, int opB, int station);
+
 
 
 

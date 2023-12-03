@@ -38,8 +38,9 @@ void liberer_memoire(Tableau_arcs *tab_arcs, Tableau_operations *tab_op);
 void temps_operations(Tableau_operations *tab_op);
 void Lire_Fichier_temps_cycle(Tableau_ws *tab_ws);
 int mainprecedence();
+int ilResteDesOperationsNonAttribuees(Tableau_operations *tab_op);
 void creerOptimiserStationsAvecCycleEtPrecedence(Tableau_operations *tab_op, Tableau_ws *tab_ws);
-
+int toutesLesContraintesDePrecedenceSontSatisfaites(Tableau_operations *tab_op, int index);;
 
 
 #endif //OPTIMISATION_D_UNE_LIGNE_D_ASSEMBLAGE_ING2_TG_2023_2024_14_4_PRECEDENCES_H
