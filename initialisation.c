@@ -2,6 +2,8 @@
 // Created by amaur on 13/11/2023.
 //
 #include "Header_general.h"
+#include"Precedence.h"
+#include "Exclusions.h"
 
 void Lire_Fichier_Arcs(Tableau_arcs *tab_arcs) {
     FILE *fichier;
@@ -30,4 +32,149 @@ void Lire_Fichier_Arcs(Tableau_arcs *tab_arcs) {
 
     } //Fin boucle while Lecture du fichier pour alimenter les  Arcs (opa, opb et niv à 0)
     fclose(fichier);
+}
+void verificationexclusions(Tableau_operations* tab_op, Tableau_ws *tab_ws,int numero){
+    for (int i = 0; i < tab_op->nb_op; i++) {
+
+    }
+}
+void creerOptimiserStationsAvecCycleEtPrecedenceetex(Tableau_operations* tab_op, Tableau_ws *tab_ws) {
+    int numeroStation = 1;
+
+    // Initialisation des workstations
+    for (int i = 0; i < tab_op->nb_op; i++) {
+        tab_op->operations[i].ws = 0; // Aucune workstation attribuée initialement
+    }
+
+    // Boucle principale pour attribuer les opérations aux workstations en tenant compte du temps de cycle
+    for (int i = 0; i < tab_op->nb_op; i++) {
+        // Si l'opération n'a pas de workstation attribuée
+        if (tab_op->operations[i].ws == 0) {
+            float tempsOperation = tab_op->operations[i].temps;
+
+            // Vérifier si toutes les opérations antérieures ont été effectuées
+            int precedencesEffectuees = 1;
+            for (int k = 0; k < tab_op->operations[i].nb_antecedents; k++) {
+                int antecedent = tab_op->operations[i].antecedents[k];
+                if (tab_op->operations[antecedent].ws == 0 ||  estValideAvecExclusionsEtStation(tab_op, i, antecedent, numeroStation)) {
+                    precedencesEffectuees = 0;
+                    break;
+                }
+            }
+
+            // Vérifier si l'opération respecte également la station actuelle
+            if (precedencesEffectuees && estValideAvecStation(tab_op, i, numeroStation)) {
+                // Attribuer la workstation et afficher les opérations attribuées à cette workstation
+                tab_op->operations[i].ws = numeroStation;
+                printf("Station %d : \nOp%d tpscumule:%.2f\n", numeroStation, tab_op->operations[i].op, tab_op->operations[i].temps);
+
+                // Attribuer les opérations suivantes dans le temps de cycle à la même workstation
+                for (int j = i + 1; j < tab_op->nb_op; j++) {
+                    if ((tab_op->operations[j].ws == 0) && (estValideAvecExclusionsEtStation(tab_op, j, i, numeroStation)) && estValideAvecStation(tab_op, j, numeroStation)) {
+                        float tempsOperationSuivante = tab_op->operations[j].temps;
+
+                        // Vérifier la précédence de l'opération suivante
+                        int precedencesOpSuivante = 1;
+                        for (int l = 0; l < tab_op->operations[j].nb_antecedents; l++) {
+                            int antecedentSuivant = tab_op->operations[j].antecedents[l];
+                            if (tab_op->operations[antecedentSuivant].ws == 0 || tab_op->operations[antecedentSuivant].ws > numeroStation) {
+                                precedencesOpSuivante = 0;
+                                break;
+                            }
+                        }
+
+                        if (precedencesOpSuivante && (tempsOperation + tempsOperationSuivante) <= tab_ws->temps_cycle) {
+                            // L'opération suivante peut être ajoutée à la workstation sans dépasser le temps de cycle
+                            tab_op->operations[j].ws = numeroStation;
+                            tempsOperation += tempsOperationSuivante;
+                            printf("Op%d tpscumule %.2f\n", tab_op->operations[j].op, tempsOperation);
+                        }
+                    }
+                }
+
+                printf("\n");
+                numeroStation++;
+            }
+        }
+    }
+
+    // Vérification supplémentaire après la boucle pour s'assurer que tous les antécédents sont effectués
+    for (int i = 0; i < tab_op->nb_op; i++) {
+        if (tab_op->operations[i].ws == 0 && !estValideAvecExclusionsEtStation(tab_op, i, i, numeroStation)) {
+            // L'opération n'a pas été attribuée et n'a pas respecté les antécédents
+            printf("Erreur : Op%d ne peut pas être attribuée en respectant la précédence.\n", tab_op->operations[i].op);
+            // Vous pouvez ajouter ici une gestion d'erreur appropriée, par exemple, sortir de la fonction ou prendre une action corrective.
+        }
+    }
+
+    // Affichage du nombre total de stations utilisées
+    printf("Nombre total de stations : %d\n", numeroStation - 1);
+}
+int estValideAvecExclusionsEtStation(Tableau_operations *tab_op, int opA, int opB, int station) {
+    // Check if opA and opB have exclusions and if they are in the same station
+    for (int i = 0; i < tab_op->operations[opA].nombre_ex; i++) {
+        if (tab_op->operations[opA].ex[i] == opB && tab_op->operations[opB].ws == station) {
+            return 0;
+            // OpA and OpB are excluded in the same station
+        }
+    }
+    for (int j = 0; j < tab_op->operations[opA].nb_antecedents; j++) {
+        int antecedent = tab_op->operations[opA].antecedents[j];
+        if (tab_op->operations[antecedent].ws > station) {
+            return 0;
+        }
+    }
+
+    // Repeat for the other direction if needed
+    for (int i = 0; i < tab_op->operations[opB].nombre_ex; i++) {
+        if (tab_op->operations[opB].ex[i] == opA && tab_op->operations[opA].ws == station) {
+            return 0;
+            // OpB and OpA are excluded in the same station
+        }
+    }
+    for (int j = 0; j < tab_op->operations[opB].nb_antecedents; j++) {
+        int antecedent = tab_op->operations[opB].antecedents[j];
+        if (tab_op->operations[antecedent].ws > station) {
+            return 0;
+        }
+    }
+
+    return 1; // No exclusion found or exclusions are in different stations
+}
+
+// Fonction pour vérifier si une opération est valide dans une station donnée
+int estValideAvecStation(Tableau_operations *tab_op, int op, int station) {
+    // Vérifier si l'opération respecte la station actuelle
+    for (int j = 0; j < tab_op->operations[op].nb_antecedents; j++) {
+        int antecedent = tab_op->operations[op].antecedents[j];
+        if (tab_op->operations[antecedent].ws > station) {
+            return 0;
+        }
+    }
+    return 1; // Opération valide dans la station actuelle
+}
+
+
+
+
+
+
+
+
+int mainexplusprecedence(){
+    tab_exclusions b;
+    Tableau_arcs tab_arcs;
+    Tableau_operations tab_op;
+    Tableau_ws tab_ws;
+    Lire_Fichier_Arcs(&tab_arcs);
+    Remplir_operations(&tab_arcs, &tab_op);
+    temps_operations(&tab_op);
+    Lire_Fichier_temps_cycle(&tab_ws);
+    recuperation_donnees(&b,&tab_op);
+    creerOptimiserStationsAvecCycleEtPrecedenceetex(&tab_op, &tab_ws);
+
+
+
+
+    return 0;
 }

@@ -70,18 +70,16 @@ int trouver_operation_disponible(Tableau_operations a,Ws* b){
                 if(b->nb_ws_op!=0) {
                     for (int j = 0; j < b->nb_ws_op; j++) {
                         for (int k = 0; k < a.operations[i].nombre_ex; k++) {
-                            //printf("tabOPE%d tabWS%d",a.operations[i].ex[k], b->tab_op[j]);
+
                             if (a.operations[i].ex[k] == b->tab_op[j]) {
-                                vrai = 1;
-                                //printf("vrai%d\n",a.operations[i].op);
+                                vrai = 1;//pour savoir si l action est disponible (si une de ses exclsuiosb est dans la station)
                             }
                         }
 
                     }
-                    if ((vrai == 0) && (a.operations[i].nombre_ex >= nombre_max)) {
+                    if ((vrai == 0) && (a.operations[i].nombre_ex >= nombre_max)) {//si l action est disponible et que c est l action la plus importante
                         nombre_max = a.operations[i].nombre_ex;
                         station = i;
-                        //printf(" k%dkk\n ",i);
                     }
                     vrai = 0;
                 }
@@ -92,7 +90,7 @@ int trouver_operation_disponible(Tableau_operations a,Ws* b){
             station=i;
         }
     }
-    return station;
+    return station;//retourner la station disponible avec le plus de
 }
 
 
@@ -105,39 +103,6 @@ int toutelesactions(Tableau_operations a){
 
     if(m==a.nb_op)return 1;
     return 0;
-}
-
-
-
-
-
-
-
-
-
-
-
-void afficher_stations(Tableau_operations *tab_op) {
-    printf("Stations et leurs opérations :\n");
-
-    // Recherche du nombre total de stations
-    int nb_stations = 0;
-    for (int i = 0; i < tab_op->nb_op; i++) {
-        if (tab_op->operations[i].ws >= nb_stations) {
-            nb_stations = tab_op->operations[i].ws + 1;
-        }
-    }
-
-    // Affichage des opérations pour chaque station
-    for (int i = 0; i < nb_stations; i++) {
-        printf("Station %d : ", i);
-        for (int j = 0; j < tab_op->nb_op; j++) {
-            if (tab_op->operations[j].ws == i) {
-                printf("%d ", tab_op->operations[j].op);
-            }
-        }
-        printf("\n");
-    }
 }
 int mainex2(){
     Tableau_ws c;
@@ -158,7 +123,6 @@ int mainex2(){
         //printf("a");
         do {
             r = trouver_operation_disponible(a, &c.ws[i]);
-            printf("\nrr%d\n",r);
             //printf("r%d\n", r);
             if (r != -1) {
                 a.operations[r].ws = 1;
@@ -176,18 +140,21 @@ int mainex2(){
 
 
     }while(toutelesactions(a)==0);
+    c.nb_ws--;
+    printf("\n\n");
 
+    printf("Le nombre de station est de %d\n",c.nb_ws);
+    for (int i = 0; i < c.nb_ws; i++) {
+        printf("station %d : ",i);
+        for (int j = 0; j <  c.ws[i].nb_ws_op; j++) {
+            printf("%d ",c.ws[i].tab_op[j]);
+        }
+        printf("\n");
 
-
-
-
-    for (int j = 0; j <  c.ws[0].nb_ws_op; j++) {
-        printf("%d ",c.ws[0].tab_op[j]);
     }
     printf("\n");
-    for (int j = 0; j <  c.ws[1].nb_ws_op; j++) {
-        printf("%d ",c.ws[1].tab_op[j]);
-    }
+
+
     return 0;
 }
 
@@ -204,29 +171,7 @@ int mainex2(){
 
 
 
-// La fonction Chercher_action_plus_influente reste inchangée
 
-/*
-int action_est_disponible(int action ,tab_exclusions a,Tableau_ws* b){
-
-    for (int i = 0; i < a.nombre_ex; i++) {
-        if(b.ws==NULL) {
-            if (a.ex[i].opa == action && a.ex[i].opb == 0)return 1;
-            if (a.ex[i].opb == action && a.ex[i].opa == 0)return 1;
-        }
-        else{
-            for (int j = 0; j < b->nb_ws; j++) {
-                for (int k = 0; k < b.ws[j].nb_ws_op; k++) {
-                    for (int l = 0; l < a.nombre_ex; l++) {
-                        if(a.ex[i].opa == action && (a.ex[i].opb == 0 ||b.ws[j].ws
-                    }
-                }
-            }
-        }
-
-    }
-    return 0;
-}*/
 
 
 

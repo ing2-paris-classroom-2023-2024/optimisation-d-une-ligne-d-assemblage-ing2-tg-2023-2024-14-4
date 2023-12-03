@@ -27,23 +27,8 @@ typedef struct {
     float temps;            // Temps de l'opération
 } Temps_op;
 
-// Structure pour stocker les opérations
-;
-
-
-// Structure pour stocker les Arcs
-
-
-// Structure pour stocker un tableau d'Operations
-
-
-// Structure pour stocker des WS
-
-
-
 /***************************************************FONCTIONS************************************************************************/
 void Lire_Fichier_Arcs(Tableau_arcs *tab_arcs);
-void Hierarchie_Arcs(Tableau_arcs *tab_arcs);
 int compare_arcs(const void *a, const void *b);
 void Trier_arcs(Tableau_arcs *tab_arcs);
 void Remplir_operations(Tableau_arcs *tab_arcs, Tableau_operations *tab_op);
@@ -51,12 +36,8 @@ int compare_operations(const void *a, const void *b);
 void Trier_operations(Tableau_operations *tab_op);
 void liberer_memoire(Tableau_arcs *tab_arcs, Tableau_operations *tab_op);
 void temps_operations(Tableau_operations *tab_op);
-
-void temps_avant(Tableau_operations *tab_op);
 void Lire_Fichier_temps_cycle(Tableau_ws *tab_ws);
-
 int mainprecedence();
-
 void creerOptimiserStationsAvecCycleEtPrecedence(Tableau_operations *tab_op, Tableau_ws *tab_ws);
 
 
