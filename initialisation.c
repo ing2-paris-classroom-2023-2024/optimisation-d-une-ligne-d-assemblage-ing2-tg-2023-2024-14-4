@@ -60,7 +60,7 @@ bool toutesLesContraintesDePrecedenceSontSatisfaitesa(Tableau_operations *tab_op
     for (int i = 0; i < tab_op->operations[index].nb_antecedents; i++) {
         int antecedent = tab_op->operations[index].antecedents[i];
         if (tab_op->operations[indice(antecedent,*tab_op)].ws == 0) {
-            return false; // Contrainte de précédence violée
+            return false; // Contrainte de précédence non respecte
         }
     }
     return true; // Toutes les contraintes sont satisfaites
@@ -69,18 +69,18 @@ bool toutesLesContraintesDePrecedenceSontSatisfaitesa(Tableau_operations *tab_op
 void creerOptimiserStationsAvecCyclea(Tableau_operations *tab_op, Tableau_ws *tab_ws) {
     int numeroStation = 1;
 
-    // Initialisation des workstations
+    // Initialisation des station
     for (int i = 0; i < tab_op->nb_op; i++) {
-        tab_op->operations[i].ws = 0; // Aucune workstation attribuée initialement
+        tab_op->operations[i].ws = 0; // Aucune station attribuée initialement
     }
 
     int operationsAttribuees = 0;
 
-    // Boucle principale pour attribuer les opérations aux workstations
+    // Boucle principale pour attribuer les opérations aux stations
     while (operationsAttribuees < tab_op->nb_op) {
         float tempsOperation = 0;
 
-        // Attribuer autant d'opérations que possible dans le temps de cycle à la même workstation
+        // Attribuer le plus d'opérations possible dans le temps de cycle à la même station
         for (int i = 0; i < tab_op->nb_op; i++) {
             if (tab_op->operations[i].ws == 0 &&
                 toutesLesContraintesDePrecedenceSontSatisfaitesa(tab_op, i) &&
