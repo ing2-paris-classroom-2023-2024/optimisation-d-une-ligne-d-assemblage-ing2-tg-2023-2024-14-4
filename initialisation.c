@@ -5,6 +5,13 @@
 #include"Precedence.h"
 #include "Exclusions.h"
 
+int indice(int valeurdelaction,Tableau_operations voiture){
+    for (int i = 0; i < voiture.nb_op; i++) {
+        if(voiture.operations[i].op==valeurdelaction)return i;
+    }
+    printf("probleme lors de la fonction indice");
+    return 0;
+}
 void Lire_Fichier_Arcs(Tableau_arcs *tab_arcs) {
     FILE *fichier;
     int opa, opb;
@@ -56,7 +63,7 @@ void creerOptimiserStationsAvecCycleEtPrecedenceetex(Tableau_operations* tab_op,
             int precedencesEffectuees = 1;
             for (int k = 0; k < tab_op->operations[i].nb_antecedents; k++) {
                 int antecedent = tab_op->operations[i].antecedents[k];
-                if (tab_op->operations[antecedent].ws == 0 ||  estValideAvecExclusionsEtStation(tab_op, i, antecedent, numeroStation)) {
+                if (tab_op->operations[antecedent].ws == 0 || tab_op->operations[antecedent].ws > numeroStation) {
                     precedencesEffectuees = 0;
                     break;
                 }
@@ -100,9 +107,9 @@ void creerOptimiserStationsAvecCycleEtPrecedenceetex(Tableau_operations* tab_op,
 
     // Vérification supplémentaire après la boucle pour s'assurer que tous les antécédents sont effectués
     for (int i = 0; i < tab_op->nb_op; i++) {
-        if (tab_op->operations[i].ws == 0 && !estValideAvecExclusionsEtStation(tab_op, i, i, numeroStation)) {
-            // L'opération n'a pas été attribuée et n'a pas respecté les antécédents
-            printf("Erreur : Op%d ne peut pas être attribuée en respectant la précédence.\n", tab_op->operations[i].op);
+        if (tab_op->operations[i].ws == 0 || !estValideAvecExclusionsEtStation(tab_op, i, i, tab_op->operations[i].ws)) {
+            // L'opération n'a pas été attribuée ou n'a pas respecté les antécédents et les exclusions
+            printf("Erreur : Op%d ne peut pas être attribuée en respectant la précédence et les exclusions.\n", tab_op->operations[i].op);
             // Vous pouvez ajouter ici une gestion d'erreur appropriée, par exemple, sortir de la fonction ou prendre une action corrective.
         }
     }
@@ -110,37 +117,43 @@ void creerOptimiserStationsAvecCycleEtPrecedenceetex(Tableau_operations* tab_op,
     // Affichage du nombre total de stations utilisées
     printf("Nombre total de stations : %d\n", numeroStation - 1);
 }
+
+
 int estValideAvecExclusionsEtStation(Tableau_operations *tab_op, int opA, int opB, int station) {
-    // Check if opA and opB have exclusions and if they are in the same station
+    // Check exclusions for opA to opB
     for (int i = 0; i < tab_op->operations[opA].nombre_ex; i++) {
         if (tab_op->operations[opA].ex[i] == opB && tab_op->operations[opB].ws == station) {
-            return 0;
-            // OpA and OpB are excluded in the same station
-        }
-    }
-    for (int j = 0; j < tab_op->operations[opA].nb_antecedents; j++) {
-        int antecedent = tab_op->operations[opA].antecedents[j];
-        if (tab_op->operations[antecedent].ws > station) {
-            return 0;
+            return 0; // OpA and OpB are excluded in the same station
         }
     }
 
-    // Repeat for the other direction if needed
+    // Check exclusions for opB to opA
     for (int i = 0; i < tab_op->operations[opB].nombre_ex; i++) {
         if (tab_op->operations[opB].ex[i] == opA && tab_op->operations[opA].ws == station) {
-            return 0;
-            // OpB and OpA are excluded in the same station
+            return 0; // OpB and OpA are excluded in the same station
         }
     }
+
+    // Check precedences for opA
+    for (int j = 0; j < tab_op->operations[opA].nb_antecedents; j++) {
+        int antecedent = tab_op->operations[opA].antecedents[j];
+        if (tab_op->operations[antecedent].ws > station) {
+            return 0; // OpA has a precedence issue
+        }
+    }
+
+    // Check precedences for opB
     for (int j = 0; j < tab_op->operations[opB].nb_antecedents; j++) {
         int antecedent = tab_op->operations[opB].antecedents[j];
         if (tab_op->operations[antecedent].ws > station) {
-            return 0;
+            return 0; // OpB has a precedence issue
         }
     }
 
     return 1; // No exclusion found or exclusions are in different stations
 }
+
+
 
 // Fonction pour vérifier si une opération est valide dans une station donnée
 int estValideAvecStation(Tableau_operations *tab_op, int op, int station) {
