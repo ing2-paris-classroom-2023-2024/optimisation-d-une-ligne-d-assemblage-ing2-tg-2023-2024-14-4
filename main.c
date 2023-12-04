@@ -5,11 +5,11 @@
 int main()
 {
 
-    printf("programme de precedence :\n\n");
+    printf("programme de precedence :\n");
     mainprecedence();
-    printf("programme d'exclusion' :\n\n");
+    printf("\nprogramme d'exclusion :");
     mainex2();
-    printf("programme d'exclusion et de precedence :\n\n");
+    printf("\n\nprogramme d'exclusion et de precedence :\n\n");
     mainexplusprecedence();
 
 

@@ -20,13 +20,13 @@ typedef struct {
 } Arcs;
 
 typedef struct {
-    int opa;
-    int opb;
-    int occurence;
+    int opa;        // opération depart
+    int opb;        // opération arrivée
+
 }exclusions;
 typedef struct{
-    exclusions *ex;
-    int nombre_ex;
+    exclusions *ex;  //tableau des exclusions
+    int nombre_ex;      //nombre d exclusion
 }tab_exclusions;
 // Structure pour stocker un tableau d' Arcs
 typedef struct {
@@ -42,9 +42,8 @@ typedef struct {
     int *antecedents;        // Tableau des opérations précedentes
     int nb_antecedents;      // Nombre des opérations précédentes dans le tableau
     int ws;    // ws affectée
-    int *ex;
-    int nombre_ex;
-    float fin;
+    int *ex;    //tableau d exclusion en lien avec l operation
+    int nombre_ex;  //nombre des exclusion lie a l operation
 } Operations;
 
 typedef struct {
@@ -57,23 +56,23 @@ typedef struct {
     float temps_ops;        // Temps des opérations affectées
     float temps_restant;    // Temps restant an fonction de temps de cycle
     int nb_ws_op;           // Nombre d'opérations affectées
-    int*tab_op;
-} Ws;
+    int*tab_op;     //stocke les operations
+} Ws;  //structure station
 
 // Structure pour stocker un tableau des WS
 typedef struct {
     Ws *ws;               // Tableau des work station
     int nb_ws;            // nombre  des work station
     float temps_cycle;    // temps de cycle par work station
-} Tableau_ws;
-int indice(int valeurdelaction,Tableau_operations voiture);
+} Tableau_ws;  //tableau de station
+int indice(int valeurdelaction,Tableau_operations voiture);//cherche l indice de l operation a partir de son numero
 
-bool aDesExclusionsAvecLaStation(Tableau_operations *tab_op, int index, int station);
-        int mainexplusprecedence();
+bool aDesExclusionsAvecLaStation(Tableau_operations *tab_op, int index, int station);//gere la contrainte precendence
 
-bool toutesLesContraintesDePrecedenceSontSatisfaitesa(Tableau_operations *tab_op, int index);
-void creerOptimiserStationsAvecCyclea(Tableau_operations *tab_op, Tableau_ws *tab_ws);
-int mainexplusprecedence();
+
+bool toutesLesContraintesDePrecedenceSontSatisfaitesa(Tableau_operations *tab_op, int index);//gere ma contraine exclusion
+void creerOptimiserStationsAvecCyclea(Tableau_operations *tab_op, Tableau_ws *tab_ws);//optimise de exclusion et precedence en meme temps
+int mainexplusprecedence();//execute l optimisation de exclusion et precedence en meme temps
 
 
 

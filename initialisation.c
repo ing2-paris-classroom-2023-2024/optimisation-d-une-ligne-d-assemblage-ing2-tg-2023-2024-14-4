@@ -54,17 +54,17 @@ bool aDesExclusionsAvecLaStation(Tableau_operations *tab_op, int index, int stat
         }
     }
     return false;
-}
+}//verifie si l action a des exclusion
 
-bool toutesLesContraintesDePrecedenceSontSatisfaitesa(Tableau_operations *tab_op, int index) {
+bool toutesLesContraintesDePrecedenceSontSatisfaitesa(Tableau_operations *tab_op, int index) {//index de la station a analyser
     for (int i = 0; i < tab_op->operations[index].nb_antecedents; i++) {
-        int antecedent = tab_op->operations[index].antecedents[i];
+        int antecedent = tab_op->operations[index].antecedents[i];//antecedent de l operation
         if (tab_op->operations[indice(antecedent,*tab_op)].ws == 0) {
             return false; // Contrainte de précédence non respecte
         }
     }
     return true; // Toutes les contraintes sont satisfaites
-}
+}//verifie que l operations est disponible en tenant compte de la contrainte de precedence
 
 void creerOptimiserStationsAvecCyclea(Tableau_operations *tab_op, Tableau_ws *tab_ws) {
     int numeroStation = 1;
@@ -77,7 +77,7 @@ void creerOptimiserStationsAvecCyclea(Tableau_operations *tab_op, Tableau_ws *ta
     int operationsAttribuees = 0;
 
     // Boucle principale pour attribuer les opérations aux stations
-    while (operationsAttribuees < tab_op->nb_op) {
+    while (operationsAttribuees < tab_op->nb_op) {//tant que toutes les operations ne sont pas attribue
         float tempsOperation = 0;
 
         // Attribuer le plus d'opérations possible dans le temps de cycle à la même station
@@ -85,10 +85,10 @@ void creerOptimiserStationsAvecCyclea(Tableau_operations *tab_op, Tableau_ws *ta
             if (tab_op->operations[i].ws == 0 &&
                 toutesLesContraintesDePrecedenceSontSatisfaitesa(tab_op, i) &&
                 !aDesExclusionsAvecLaStation(tab_op, i, numeroStation) &&
-                (tempsOperation + tab_op->operations[i].temps) <= tab_ws->temps_cycle) {
+                (tempsOperation + tab_op->operations[i].temps) <= tab_ws->temps_cycle) {//si la station est disponible et il est compatible avec le temps de cycle
 
                 tab_op->operations[i].ws = numeroStation;
-                tempsOperation += tab_op->operations[i].temps;
+                tempsOperation += tab_op->operations[i].temps;//ajouter l action a la station
                 printf("Station %d : Op%d ", numeroStation, tab_op->operations[i].op);
                 operationsAttribuees++;
 
@@ -100,7 +100,7 @@ void creerOptimiserStationsAvecCyclea(Tableau_operations *tab_op, Tableau_ws *ta
                         (tempsOperation + tab_op->operations[j].temps) <= tab_ws->temps_cycle) {
 
                         tab_op->operations[j].ws = numeroStation;
-                        tempsOperation += tab_op->operations[j].temps;
+                        tempsOperation += tab_op->operations[j].temps;//ajout station
                         printf("Op%d ", tab_op->operations[j].op);
                         operationsAttribuees++;
                     }

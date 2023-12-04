@@ -63,11 +63,11 @@ void recuperation_donnees(tab_exclusions*a ,Tableau_operations *b){
 }
 int trouver_operation_disponible(Tableau_operations a,Ws* b){
     int nombre_max=0,station=-1,vrai=0;
-    for (int i = 0; i < a.nb_op; i++) {
-        if(a.operations[i].ws==0){
+    for (int i = 0; i < a.nb_op; i++) {//parcours toutes les stations
+        if(a.operations[i].ws==0){//si l operation n est pas dans une station
             //printf("%d",b.nb_ws);
 
-                if(b->nb_ws_op!=0) {
+                if(b->nb_ws_op!=0) {//si la station a des actions
                     for (int j = 0; j < b->nb_ws_op; j++) {
                         for (int k = 0; k < a.operations[i].nombre_ex; k++) {
 
@@ -77,7 +77,7 @@ int trouver_operation_disponible(Tableau_operations a,Ws* b){
                         }
 
                     }
-                    if ((vrai == 0) && (a.operations[i].nombre_ex >= nombre_max)) {//si l action est disponible et que c est l action la plus importante
+                    if ((vrai == 0) && (a.operations[i].nombre_ex >= nombre_max)) {//si l action est disponible et que c est l action est l aciton la plus importante
                         nombre_max = a.operations[i].nombre_ex;
                         station = i;
                     }
@@ -87,18 +87,22 @@ int trouver_operation_disponible(Tableau_operations a,Ws* b){
         }
         if((b->nb_ws_op==0) && (a.operations[i].nombre_ex>=nombre_max) && (a.operations[i].ws==0)){
             nombre_max = a.operations[i].nombre_ex;
-            station=i;
+            station=i;//ajouter l operation si elle n est pas deja dans une station
         }
     }
     return station;//retourner la station disponible avec le plus de
 }
+// si vrai ==1 alors station non disponible
+//si vrai==0 alors station disponible
+
+//parcours toutes les stations et regarde si l action est disponible
 
 
 
 int toutelesactions(Tableau_operations a){
     int m=0;
     for (int i = 0; i < a.nb_op; i++) {
-        m+=a.operations[i].ws;
+        m+=a.operations[i].ws;//compte le nombre total d'action presente dans les stations
     }
 
     if(m==a.nb_op)return 1;
@@ -106,7 +110,7 @@ int toutelesactions(Tableau_operations a){
 }
 int mainex2(){
     Tableau_ws c;
-    c.ws=(Ws*) malloc(sizeof (Ws)*1);
+    c.ws=(Ws*) malloc(sizeof (Ws)*1);//tableau de station on cree une station
     c.ws[0].tab_op=NULL;
     c.nb_ws=1;
     c.ws[0].nb_ws_op=0;
@@ -115,23 +119,20 @@ int mainex2(){
 
     Tableau_operations a;
     tab_exclusions b;
-    temps_operations_ex(&a);
-    recuperation_donnees(&b,&a);
+    temps_operations_ex(&a);//recupere les temps des opêrations
+    recuperation_donnees(&b,&a);//recuper les infos exclsuion dans le fichier texte et rempli les differents tableaux d exclusion et le nombre d exclusion
     int i=0;
-    int r=-1;
+    int r;//contient l indice de l action
     do {
-        //printf("a");
         do {
-            r = trouver_operation_disponible(a, &c.ws[i]);
-            //printf("r%d\n", r);
-            if (r != -1) {
+            r = trouver_operation_disponible(a, &c.ws[i]);//r est egal a l indice de la station disponible ayant le plus d'exclusion
+            if (r != -1) { //si r est une action alors ajouter l action a une station
                 a.operations[r].ws = 1;
                 c.ws[i].nb_ws_op++;
                 c.ws[i].tab_op = (int *) realloc(c.ws[i].tab_op, sizeof(int) * c.ws[i].nb_ws_op);
                 c.ws[i].tab_op[(c.ws[i].nb_ws_op - 1)] = a.operations[r].op;
-
             }
-        } while (r != -1);
+        } while (r != -1);//faire tant qu il y a des operations disponible
         c.nb_ws++;
         c.ws=(Ws*) realloc(c.ws,sizeof (Ws)*c.nb_ws);
         c.ws[(c.nb_ws-1)].nb_ws_op=0;
@@ -139,7 +140,7 @@ int mainex2(){
         c.ws[i].tab_op=NULL;
 
 
-    }while(toutelesactions(a)==0);
+    }while(toutelesactions(a)==0);//tant que toutes les operations ne sont pas toutes attribuer
     c.nb_ws--;
     printf("\n\n");
 
@@ -152,7 +153,6 @@ int mainex2(){
         printf("\n");
 
     }
-    printf("\n");
 
 
     return 0;
