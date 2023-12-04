@@ -18,6 +18,8 @@ void temps_avant(Tableau_operations *tab_op);
 void Hierarchie_Arcs(Tableau_arcs *tab_arcs);
 void Trier_operations(Tableau_operations *tab_op);
 
+//printf("Test"\n);
+//printf("Test Final\n");
 
 
 #endif //PROJETS1_EXCLUSIONS_H
