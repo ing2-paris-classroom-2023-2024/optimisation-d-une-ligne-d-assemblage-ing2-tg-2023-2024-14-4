@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "Exclusions.h"
 #include "float.h"
-void temps_operations_ex(Tableau_operations *tab_op) {
+void temps_operations_ex(Tableau_operations *tab_op) {//recupere les donnees des operations dans les fichier txt
     FILE *fichier;
     fichier = fopen("..\\operation.txt", "r");
 
@@ -22,7 +22,7 @@ void temps_operations_ex(Tableau_operations *tab_op) {
     fclose(fichier);
 
 }
-void recuperation_donnees(tab_exclusions*a ,Tableau_operations *b){
+void recuperation_donnees(tab_exclusions*a ,Tableau_operations *b){//recupere les informations de l exclucion dans le fichier
     FILE *fichier;
     fichier= fopen("..\\exclusions.txt","r");
     int opa,opb;
@@ -62,7 +62,7 @@ void recuperation_donnees(tab_exclusions*a ,Tableau_operations *b){
 
 }
 int trouver_operation_disponible(Tableau_operations a,Ws* b){
-    int nombre_max=0,station=-1,vrai=0;
+    int nombre_max=0,station=-1,vrai=0;//station la plus utilise  nombre_max : nombre max d occurence de la station ayant le plus d occurence
     for (int i = 0; i < a.nb_op; i++) {//parcours toutes les stations
         if(a.operations[i].ws==0){//si l operation n est pas dans une station
             //printf("%d",b.nb_ws);
