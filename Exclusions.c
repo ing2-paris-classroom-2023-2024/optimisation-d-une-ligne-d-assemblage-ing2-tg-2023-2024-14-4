@@ -47,13 +47,13 @@ void recuperation_donnees(tab_exclusions*a ,Tableau_operations *b){
     for (int i = 0; i < b->nb_op; i++) {
         for (int j = 0; j < a->nombre_ex; j++) {
             if (b->operations[i].op == a->ex[j].opa) {
-                b->operations[i].nombre_ex++;
+                b->operations[i].nombre_ex++;//ajoutes les exc dans les operations
                 b->operations[i].ex = (int *)realloc(b->operations[i].ex, sizeof(int) * b->operations[i].nombre_ex);
                 b->operations[i].ex[(b->operations[i].nombre_ex - 1)] = a->ex[j].opb;
             }
 
             if (b->operations[i].op == a->ex[j].opb) {
-                b->operations[i].nombre_ex++;
+                b->operations[i].nombre_ex++;//ajoute les exc dans les operations
                 b->operations[i].ex = (int *)realloc(b->operations[i].ex, sizeof(int) * b->operations[i].nombre_ex);
                 b->operations[i].ex[(b->operations[i].nombre_ex - 1)] = a->ex[j].opa;
             }
@@ -127,7 +127,7 @@ int mainex2(){
         do {
             r = trouver_operation_disponible(a, &c.ws[i]);//r est egal a l indice de la station disponible ayant le plus d'exclusion
             if (r != -1) { //si r est une action alors ajouter l action a une station
-                a.operations[r].ws = 1;
+                a.operations[r].ws = 1;//ajoute l operation a la station
                 c.ws[i].nb_ws_op++;
                 c.ws[i].tab_op = (int *) realloc(c.ws[i].tab_op, sizeof(int) * c.ws[i].nb_ws_op);
                 c.ws[i].tab_op[(c.ws[i].nb_ws_op - 1)] = a.operations[r].op;
@@ -137,7 +137,7 @@ int mainex2(){
         c.ws=(Ws*) realloc(c.ws,sizeof (Ws)*c.nb_ws);
         c.ws[(c.nb_ws-1)].nb_ws_op=0;
         i++;
-        c.ws[i].tab_op=NULL;
+        c.ws[i].tab_op=NULL;//ajoute une station
 
 
     }while(toutelesactions(a)==0);//tant que toutes les operations ne sont pas toutes attribuer
