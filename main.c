@@ -291,7 +291,70 @@ int main()
      tiv
      ely.
 
-    */
-
+    ly.
+            It
+    fal
+    ls u
+    nder
+            the
+    cat
+            egor
+    y of
+    a glo
+    bal c
+    omm
+            on, a
+    s it
+    affec
+    ts a
+    ll
+            natio
+    ns and
+    h
+    as c
+    onse
+            quences
+    for
+    th
+    e en
+    tire g
+    loba
+    l c
+    omm
+    unity
+            . Unlik
+    e pr
+    iv
+    ate go
+    ods, w
+    hic
+    h ca
+    n be o
+    wned a
+            nd
+    cont
+            rolled
+    , sp
+    ace d
+    ebri
+    s re
+    quires
+            inter
+    nat
+            ional
+    coope
+            ra
+    tio
+    n to ad
+    dress
+            i
+    ts
+            chall
+    enges
+            co
+    llec
+            tiv
+    ely.
+        */
     return 0;
 }
